@@ -7,21 +7,22 @@
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build && node scripts/build-offline.mjs && node scripts/check-offline.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "TZ=America/New_York node --experimental-strip-types --test tests/*.test.ts"
+    "test": "TZ=America/New_York node --experimental-strip-types --test tests/*.test.ts tests/*.test.mjs"
   },
   "dependencies": {
+    "lucide-react": "1.31.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "lucide-react": "1.31.0",
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@types/node": "22.19.19",
-    "typescript": "5.9.3",
-    "vite": "8.0.13",
     "@vitejs/plugin-react": "6.0.2",
-    "fake-indexeddb": "6.2.4"
+    "fake-indexeddb": "6.2.4",
+    "react-test-renderer": "^19.2.6",
+    "typescript": "5.9.3",
+    "vite": "8.0.13"
   }
 }
