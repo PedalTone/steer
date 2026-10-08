@@ -22,4 +22,4 @@
  86%{transform:translateX(4px) rotate(.35deg);opacity:1;animation-timing-function:ease-out}
  100%{transform:translateX(0) rotate(0);opacity:1}
 }
-@media(prefers-reduced-motion:reduce){.swish-out,.swish-in{animation:none}}
+@media(prefers-reduced-motion:reduce){.encouragement-carousel:not(.motion-enabled) .swish-out,.encouragement-carousel:not(.motion-enabled) .swish-in{animation:none}}
