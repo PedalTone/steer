@@ -8,8 +8,9 @@ const worker=`// Static app files only. Journal data is never cached here or sen
 const PREFIX='steer-shell-'+new URL(self.registration.scope).pathname+'-';
 const CACHE=PREFIX+${JSON.stringify(revision)};
 const ASSETS=${JSON.stringify(assets)};
-self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));});
-// Wait for all open app windows to close before activating a newer app version.
+self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));});
+// Activate only after the complete app shell is cached. Existing pages are not reloaded;
+// their unsaved form state stays intact. The next navigation uses the new shell.
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith(PREFIX)&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',event=>{
  const request=event.request,url=new URL(request.url),scope=new URL(self.registration.scope);
