@@ -10,7 +10,11 @@ A simple personal decision journal for iPhone: pause, remember your plan, choose
 4. Choose a situation, read your reminder, select your choice, then tap **Save to my journal**.
 5. Wait for **Saved on this device**. Weekly and monthly trends include the saved choice.
 
-Settings lets you add choices with a picture, rename or hide existing choices, and edit a list of encouragement phrases. Phrases vary between moments without an immediate repeat; the reminder screen also has an **Another encouragement** button. Tap **Save my settings** to keep changes on this device. Existing custom reminders and older backups remain compatible.
+Pause asks **Where do you want to steer?** and offers seven directions: Be Present, Eat Well, Rest Well, Be Kind to Myself, Start My Day, Use My Time Well, and Move Well. Each starts with its approved encouragement, plan reminder, and small next step. **Choose my plan** and **Continue as I was** both lead to the explicit local save step.
+
+Settings lets you add directions with a picture, rename or hide buttons, edit each direction’s encouragement and next step, and keep extra encouragement phrases. **Another encouragement** cycles through the direction’s phrase and your extra phrases. Tap **Save my settings** to keep changes locally.
+
+Older settings automatically show the new directions, retaining custom choices, recipe, general reminders, and hidden-button preferences. Old food records are grouped under Eat Well in reports. Original entry IDs, labels, times, choices, and notes remain stored unchanged; editing a historic entry uses that original record. New settings carry a migration marker so later personal edits are preserved. Older backups remain importable.
 
 Settings includes installation help, offline status, editable reminders, and backup/restore. Offline use becomes available after the complete app shell downloads successfully. A new app version waits for all open Steer windows to close before taking over.
 

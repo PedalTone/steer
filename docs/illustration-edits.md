@@ -18,3 +18,9 @@ Final assets retain their existing filenames so saved local choices keep the rig
 - `public/illustrations/option-a-lingering-in-bed-v2.webp`
 - `public/illustrations/option-a-watching-movies-v2.webp`
 - `public/apple-touch-icon.png`
+
+## Move Well
+
+Generated with the built-in image tool using the updated splash character as a reference. Inspected and exported to `public/illustrations/move-well.webp` at 400px.
+
+> Create one square simple flat cartoon illustration for the Move Well button of an iPhone decision journal. Use the supplied image as the character and style reference: same friendly older man, white side-parted hair and white beard, dark outlines, warm skin, terracotta shirt with one thin cream chest stripe. Show him smiling, waist-up, gently lifting one small slate-blue dumbbell in one hand, ready for a strength workout. Preserve his recognizable face and simple flat style. White background, generous white margin, no text or extra objects, no detailed textures. Clear recognizable shapes at 94px button size. This is a new workout pose, not the waving pose.
