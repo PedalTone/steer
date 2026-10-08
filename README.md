@@ -1,0 +1,46 @@
+# Steer
+
+A simple personal decision journal for iPhone: pause, remember your plan, choose, and explicitly save the moment.
+
+## Use on iPhone
+
+1. Open the published GitHub Pages URL in Safari.
+2. Tap **Share → Add to Home Screen**. Turn on **Open as Web App** if offered, then tap **Add**.
+3. Open the **Steer** icon. Use this installed app consistently for your journal.
+4. Choose a situation, read your reminder, select your choice, then tap **Save to my journal**.
+5. Wait for **Saved on this device**. Weekly and monthly trends include the saved choice.
+
+Settings includes installation help, offline status, editable reminders, and backup/restore. Offline use becomes available after the complete app shell downloads successfully. A new app version waits for all open Steer windows to close before taking over.
+
+## Where your data lives
+
+All entries, notes, edited reminders, and settings are stored in IndexedDB on the device. There is no account, backend, analytics, or cloud journal. GitHub Pages receives normal requests for static app files, but the app never uploads journal contents. Public source includes only the app, default wording, and illustrations.
+
+Each browser/app installation and website origin may have a separate journal. Install the Home Screen app before logging. Data from the previous Sites-hosted app does not automatically move here; the old app and its saved records are not modified by this project.
+
+Local browser storage is not a guaranteed permanent backup. Clearing site data or deleting the app can erase it. The app asks the browser for persistent storage after a save, but this is not guaranteed. Use **Settings → On this device → Back up or restore my journal → Export backup to Files**. Choose **On My iPhone** to keep your backup local, rather than a cloud Files location.
+
+Backup export opens the system share sheet when supported, or starts a file download. The app cannot confirm whether the file was saved in Files. Backups contain private journal contents; do not commit them to this repository. Restore validates a versioned JSON format, merges missing entry IDs, and preserves existing entries. Replacing reminders requires selecting its separate checkbox.
+
+## Development
+
+Requires Node.js 22.13 or newer.
+
+```sh
+npm ci
+npm run dev
+npm test
+npm run build
+npm run preview
+```
+
+Use external Safari or Chrome for visual review. Do not use Codex's built-in browser for routine inspection on this system. Inspect the actual iPhone workflow, especially the save confirmation, Home Screen installation, offline reopening, and backup share sheet.
+
+The tests cover date grouping, validation, local persistence, concurrent writes, retries, failed saves, backup imports, and absence of network use by the journal layer. `npm run build` also checks the packaged service worker using simulated cache/install/navigation events at a repository subpath.
+
+## GitHub Pages
+
+The workflow `.github/workflows/pages.yml` tests and builds the app on pushes to the default branch, `codex/iphone-local`, then deploys `dist/` through GitHub Pages. Repository Settings → Pages must use **GitHub Actions** as the source. Vite uses relative asset paths, so repository-based URLs work. The build generates a revisioned service worker and caches only public app assets, never journal data.
+
+Installation reference: [Apple's Home Screen web app guide](https://support.apple.com/guide/iphone/open-as-web-app-iphea86e5236/ios).
+Storage reference: [WebKit storage policy](https://webkit.org/blog/14403/updates-to-storage-policy/).
