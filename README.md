@@ -56,6 +56,8 @@ Choose a goal, read a brief encouragement, and tap an alternative action. Review
 
 Settings → My directions → Things I could do instead lets you edit, add, or remove alternatives for each goal (up to 30 per goal). The seven starter goals each include five options. Save my settings commits changes locally. Existing custom lists, including intentionally empty lists, are preserved. Selected action text is saved with each entry and included in local backups, even if the settings list changes later.
 
-Encouragements cycle in order with a brief anticipation, an offstage yank, and a settling entrance. Each stays readable for at least 6.5 seconds. Next and Pause controls are available. Cycling pauses only through the Pause control or while the app is hidden. Reduce Motion disables automatic cycling and animation, with an explicit Play with motion option for this visit.
+Encouragements cycle automatically with a brief anticipation, an offstage yank, and a settling entrance. Each stays readable for at least 6.5 seconds. There are no carousel controls on the action screen. Reduce Motion disables automatic cycling and animation.
 
 App updates activate after the complete new shell has downloaded, even with other Steer windows open. Existing pages are never forcibly reloaded, preserving unsaved form state. Refresh after saving to load the new version. A failed download leaves the previous offline app available. Updates do not modify IndexedDB journal data.
+
+Goals use colorful native emoji icons on pastel tiles. The character appears only on the splash screen. The compact action screen places five starter options directly below a smaller encouragement; longer custom lists or larger accessibility text can still scroll. Notes and reminders are available below the choices.

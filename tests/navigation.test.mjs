@@ -26,12 +26,17 @@ test('moment flow requires a goal selection before actions, then records the sel
   await act(async()=>button('I’m in a moment').props.onClick());
   let cards=renderer.root.findAllByProps({className:'choice-card'});
   assert.equal(cards.length,7);
+  assert.equal(renderer.root.findAllByType('img').length,0);
+  assert.equal(renderer.root.findAllByProps({className:'goal-icon'}).length,7);
   assert.equal(renderer.root.findAllByProps({className:'moment-options'}).length,0);
   await act(async()=>cards.find(c=>textOf(c.props.children).includes('Eat Well')).props.onClick());
   assert.equal(renderer.root.findAllByProps({className:'choice-card'}).length,0);
   assert.equal(renderer.root.findAllByProps({className:'moment-options'}).length,1);
   const options=renderer.root.findAllByProps({className:'secondary action-option'});
   assert.equal(options.length,5);
+  assert.equal(renderer.root.findAllByType('img').length,0);
+  assert.equal(button('Next encouragement'),undefined);
+  assert.equal(button('Pause cycling'),undefined);
   await act(async()=>options[0].props.onClick());
   assert.equal(renderer.root.findAllByProps({className:'review'}).length,1);
   assert.ok(JSON.stringify(renderer.toJSON()).includes('Eat Well'));
