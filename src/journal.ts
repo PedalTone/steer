@@ -1,11 +1,19 @@
 import { z } from 'zod';
+export const starterEncouragements = [
+    'You can make the harder choice.',
+    'A little hard now. A little prouder later.',
+    'Pause. Remember the life you want.',
+    'You only need to choose this next step.'
+];
 export const categorySchema = z.object({ id: z.string().min(1).max(80), label: z.string().trim().min(1).max(80), image: z.string().max(80), active: z.boolean() });
 export const settingsSchema = z.object({
-    headline: z.string().trim().min(1).max(140), reminder: z.string().trim().min(1).max(500),
+    headline: z.string().trim().min(1).max(140),
+    encouragements: z.array(z.string().trim().min(1, 'Write a phrase or remove the empty one.').max(140)).min(1).max(20).optional(),
+    reminder: z.string().trim().min(1).max(500),
     outcomes: z.string().trim().min(1).max(300),
     recipe: z.array(z.object({ title: z.string().trim().min(1).max(120), detail: z.string().max(400) })).length(4),
     categories: z.array(categorySchema).min(1).max(40).refine(a => new Set(a.map(x => x.id)).size === a.length, 'Choices must have unique IDs')
-});
+}).transform(settings => ({...settings, encouragements: settings.encouragements ?? [settings.headline, ...starterEncouragements.filter(phrase => phrase !== settings.headline)]}));
 export type Settings = z.infer<typeof settingsSchema>;
 export type Category = Settings['categories'][number];
 export type Entry = {
@@ -20,6 +28,7 @@ export type Entry = {
 };
 export const defaults: Settings = {
     headline: 'You can make the harder choice.',
+    encouragements: [...starterEncouragements],
     reminder: 'It may feel hard right now. Think about how proud you’ll feel afterward. One choice, right now.',
     outcomes: 'Sharp mind. Happy mind.\nHealthy body. Long life.',
     recipe: [{ title: 'Get plenty of rest.', detail: '' }, { title: 'Get up and move.', detail: 'Do my workout, prioritize strength, move daily, and stay on schedule.' }, { title: 'Eat protein + fiber.', detail: 'Limit junk food. Eat sensible portions.' }, { title: 'Practice self-control.', detail: 'Pause, remember my plan, and choose deliberately.' }],
@@ -27,6 +36,11 @@ export const defaults: Settings = {
 };
 export const knownImages = new Set(defaults.categories.map(c => c.image));
 export function imageFor(category: Category) { return knownImages.has(category.image) ? `./illustrations/${category.image}` : './illustrations/splash-recipe-v2.webp'; }
+export const choicePictures = [{label:'Steer companion',image:'splash-recipe-v2.webp'}, ...defaults.categories.map(c=>({label:c.label,image:c.image}))];
+export function chooseEncouragement(phrases:string[],previous:string,random:()=>number=Math.random){
+    const unique=[...new Set(phrases)];const different=unique.filter(phrase=>phrase!==previous);const candidates=different.length?different:unique;
+    return candidates[Math.floor(random()*candidates.length)]??starterEncouragements[0];
+}
 const recordFields = { categoryId: z.string().min(1).max(80), categoryLabel: z.string().trim().min(1).max(80), choice: z.enum(['plan', 'original']), mode: z.enum(['moment', 'reflection']), occurredAt: z.string().datetime().refine(v => new Date(v).getTime() <= Date.now() + 60000 && new Date(v).getFullYear() >= 2000, 'Choose a time in the past or present'), note: z.string().max(1000) };
 export const mutationSchema = z.discriminatedUnion('action', [
     z.object({ action: z.literal('record'), id: z.string().uuid(), ...recordFields }),

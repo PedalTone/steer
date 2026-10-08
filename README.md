@@ -10,6 +10,8 @@ A simple personal decision journal for iPhone: pause, remember your plan, choose
 4. Choose a situation, read your reminder, select your choice, then tap **Save to my journal**.
 5. Wait for **Saved on this device**. Weekly and monthly trends include the saved choice.
 
+Settings lets you add choices with a picture, rename or hide existing choices, and edit a list of encouragement phrases. Phrases vary between moments without an immediate repeat; the reminder screen also has an **Another encouragement** button. Tap **Save my settings** to keep changes on this device. Existing custom reminders and older backups remain compatible.
+
 Settings includes installation help, offline status, editable reminders, and backup/restore. Offline use becomes available after the complete app shell downloads successfully. A new app version waits for all open Steer windows to close before taking over.
 
 ## Where your data lives

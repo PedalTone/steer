@@ -1,3 +1,4 @@
+import {settingsSchema,chooseEncouragement} from '../src/journal.ts';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { periodBounds, shiftPeriod, entriesInPeriod, summarize, timeline, mutationSchema, defaults, type Entry } from '../src/journal.ts';
@@ -9,3 +10,7 @@ test('month timeline assigns each recorded choice exactly once', () => { const r
 test('empty journals never imply perfect or failed choices', () => { assert.equal(summarize([]).rate, null); assert.equal(summarize([]).total, 0); });
 test('input validation rejects future dates, invalid choices, oversized notes and duplicate category IDs', () => { const valid = { action: 'record', ...entry('2025-10-01T15:00:00') }; assert.equal(mutationSchema.safeParse(valid).success, true); for (const patch of [{ choice: 'unknown' }, { occurredAt: new Date(Date.now() + 86400000).toISOString() }, { note: 'x'.repeat(1001) }])
     assert.equal(mutationSchema.safeParse({ ...valid, ...patch }).success, false); assert.equal(mutationSchema.safeParse({ action: 'settings', settings: { ...defaults, categories: [defaults.categories[0], defaults.categories[0]] } }).success, false); });
+
+test('legacy settings preserve custom encouragement while adding phrase options',()=>{const {encouragements:_,...legacy}=defaults;const result=settingsSchema.parse({...legacy,headline:'Remember my own plan.'});assert.equal(result.encouragements[0],'Remember my own plan.');assert.ok(result.encouragements.length>1);assert.equal(result.recipe[0].title,legacy.recipe[0].title);});
+test('encouragement selection avoids an immediate repeat and supports a single phrase',()=>{assert.equal(chooseEncouragement(['One','Two'],'One',()=>0),'Two');assert.equal(chooseEncouragement(['One'],'One',()=>0),'One');assert.equal(chooseEncouragement(['One','One'],'One',()=>0),'One');});
+test('phrase lists require at least one nonempty option',()=>{for(const encouragements of [[],[' '],Array(21).fill('Too many')])assert.equal(settingsSchema.safeParse({...defaults,encouragements}).success,false);});
