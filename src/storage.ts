@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { defaults, settingsSchema, mutationSchema, type Entry, type Settings } from './journal.ts';
+import { defaults, alternativeSchema, settingsSchema, mutationSchema, type Entry, type Settings } from './journal.ts';
 const DB_NAME='steer-local-journal-v1';
-const entrySchema=z.object({id:z.string().uuid(),categoryId:z.string().min(1).max(80),categoryLabel:z.string().min(1).max(80),choice:z.enum(['plan','original']),mode:z.enum(['moment','reflection']),occurredAt:z.string().datetime(),recordedAt:z.string().datetime(),note:z.string().max(1000)});
+const entrySchema=z.object({alternative:alternativeSchema,id:z.string().uuid(),categoryId:z.string().min(1).max(80),categoryLabel:z.string().min(1).max(80),choice:z.enum(['plan','original']),mode:z.enum(['moment','reflection']),occurredAt:z.string().datetime(),recordedAt:z.string().datetime(),note:z.string().max(1000)});
 const backupSchema=z.object({app:z.literal('steer'),version:z.literal(1),exportedAt:z.string().datetime(),settings:settingsSchema,entries:z.array(entrySchema).max(50000)}).refine(v=>new Set(v.entries.map(e=>e.id)).size===v.entries.length,'Duplicate entries in backup');
 export type Journal={settings:Settings;entries:Entry[]};
 export type Backup=z.infer<typeof backupSchema>;
@@ -43,7 +43,7 @@ export async function writeJournal(body:unknown):Promise<Entry|undefined>{
    // A retry of a completed save returns the existing entry, never another copy.
    if(v.action==='record'&&existing.result){set(existing.result);return;}
    if(v.action==='edit'&&!existing.result){tx.abort();return;}
-   const entry:Entry={id:v.id,categoryId:v.categoryId,categoryLabel:v.categoryLabel,choice:v.choice,mode:v.mode,occurredAt:v.occurredAt,note:v.note,recordedAt:existing.result?.recordedAt??new Date().toISOString()};
+   const entry:Entry={alternative:v.choice==='plan'?v.alternative:undefined,id:v.id,categoryId:v.categoryId,categoryLabel:v.categoryLabel,choice:v.choice,mode:v.mode,occurredAt:v.occurredAt,note:v.note,recordedAt:existing.result?.recordedAt??new Date().toISOString()};
    store.put(entry);set(entry);
   };
  });

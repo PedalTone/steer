@@ -16,14 +16,65 @@ export const directionDefinitions = [
  {id:'watching-movies',label:'Use My Time Well',image:'option-a-watching-movies-v2.webp',encouragement:'Choose what you’ll be glad you made time for.',guidance:'Remember what makes a good day: movement, creativity, and connection. Pause the movie and take one small step toward one of those.'},
  {id:'move-well',label:'Move Well',image:'move-well.webp',encouragement:'You don’t have to feel motivated to begin.',guidance:'Remember your plan: prioritize strength, move daily, and stay on schedule. Put on your workout clothes and take the first step.'}
 ];
-export const categorySchema = z.object({id:z.string().min(1).max(80),label:z.string().trim().min(1).max(80),image:z.string().max(80),active:z.boolean(),encouragement:z.string().trim().max(140).optional(),guidance:z.string().trim().max(500).optional()});
+export const defaultAlternatives: Record<string,string[]> = {
+  "scrolling": [
+    "Put my phone out of reach",
+    "Step outside",
+    "Talk with someone",
+    "Play some music",
+    "Notice five things around me"
+  ],
+  "eat-well": [
+    "Pause and check whether I’m hungry",
+    "Choose protein + fiber",
+    "Start with a sensible portion",
+    "Put leftovers away before taking seconds",
+    "Enjoy the conversation while I decide"
+  ],
+  "staying-up-late": [
+    "Put my phone on its charger",
+    "Turn off the TV",
+    "Brush my teeth",
+    "Dim the lights",
+    "Get into bed"
+  ],
+  "negative-self-talk": [
+    "Speak to myself like a friend",
+    "Name one thing I did well",
+    "Replace a harsh thought with a fair one",
+    "Take three slow breaths",
+    "Reach out to someone supportive"
+  ],
+  "lingering-in-bed": [
+    "Sit up and put my feet down",
+    "Open the curtains",
+    "Put on workout clothes",
+    "Walk to my workout space",
+    "Start the first step of my morning plan"
+  ],
+  "watching-movies": [
+    "Play an instrument",
+    "Make something",
+    "Call a friend or family member",
+    "Take a walk",
+    "Spend ten minutes on a meaningful project"
+  ],
+  "move-well": [
+    "Put on workout clothes",
+    "Do a five-minute warm-up",
+    "Start my first strength exercise",
+    "Take a brisk walk",
+    "Do a shorter version of my planned workout"
+  ]
+};
+export const categorySchema = z.object({id:z.string().min(1).max(80),label:z.string().trim().min(1).max(80),image:z.string().max(80),active:z.boolean(),encouragement:z.string().trim().max(140).optional(),guidance:z.string().trim().max(500).optional(),alternatives:z.array(z.string().trim().min(1, "Write an option or remove the empty one.").max(180)).max(30).optional()});
 type StoredCategory=z.infer<typeof categorySchema>;
 function upgradeDirections(categories:StoredCategory[]):StoredCategory[]{
  const oldIds=new Set(legacyCategories.map(c=>c.id));
  const upgraded=directionDefinitions.map(direction=>{
   const existing=categories.find(c=>c.id===direction.id);
   const oldFood=categories.filter(c=>foodIds.has(c.id));
-  return {...direction,active:existing?.active??(direction.id==='eat-well'&&oldFood.length?oldFood.some(c=>c.active):true),...(existing?.encouragement?{encouragement:existing.encouragement}:{}),...(existing?.guidance?{guidance:existing.guidance}:{})};
+  return {...direction,alternatives:existing?.alternatives,active:existing?.active??(direction.id==='eat-well'&&oldFood.length?oldFood.some(c=>c.active):true),...(existing?.encouragement?{encouragement:existing.encouragement}:{}),...(existing?.guidance?{guidance:existing.guidance}:{})};
  });
  return [...upgraded,...categories.filter(c=>!oldIds.has(c.id)&&!directionDefinitions.some(d=>d.id===c.id))];
 }
@@ -35,7 +86,7 @@ export const settingsSchema = z.object({
     outcomes: z.string().trim().min(1).max(300),
     recipe: z.array(z.object({ title: z.string().trim().min(1).max(120), detail: z.string().max(400) })).length(4),
     categories: z.array(categorySchema).min(1).max(60).refine(a => new Set(a.map(x => x.id)).size === a.length, 'Choices must have unique IDs')
-}).transform(settings => ({...settings,directionsVersion:1 as const,categories:settings.directionsVersion===1?settings.categories:upgradeDirections(settings.categories), encouragements: settings.encouragements ?? [settings.headline, ...starterEncouragements.filter(phrase => phrase !== settings.headline)]}));
+}).transform(settings => ({...settings,directionsVersion:1 as const,categories:(settings.directionsVersion===1?settings.categories:upgradeDirections(settings.categories)).map((c):StoredCategory=>({...c,alternatives:c.alternatives??[...(defaultAlternatives[c.id]??[])]})), encouragements: settings.encouragements ?? [settings.headline, ...starterEncouragements.filter(phrase => phrase !== settings.headline)]}));
 export type Settings = z.infer<typeof settingsSchema>;
 export type Category = Settings['categories'][number];
 export type Entry = {
@@ -47,6 +98,7 @@ export type Entry = {
     occurredAt: string;
     recordedAt: string;
     note: string;
+    alternative?: string;
 };
 export const defaults: Settings = {
     directionsVersion:1,
@@ -55,7 +107,7 @@ export const defaults: Settings = {
     reminder: 'It may feel hard right now. Think about how proud you’ll feel afterward. One choice, right now.',
     outcomes: 'Sharp mind. Happy mind.\nHealthy body. Long life.',
     recipe: [{ title: 'Get plenty of rest.', detail: '' }, { title: 'Get up and move.', detail: 'Do my workout, prioritize strength, move daily, and stay on schedule.' }, { title: 'Eat protein + fiber.', detail: 'Limit junk food. Eat sensible portions.' }, { title: 'Practice self-control.', detail: 'Pause, remember my plan, and choose deliberately.' }],
-    categories: directionDefinitions.map(direction=>({...direction,active:true}))
+    categories: directionDefinitions.map(direction=>({...direction,active:true,alternatives:[...defaultAlternatives[direction.id]]}))
 };
 export const knownImages = new Set([...defaults.categories,...legacyCategories].map(c => c.image));
 export function imageFor(category: Category) { return knownImages.has(category.image) ? `./illustrations/${category.image}` : './illustrations/splash-recipe-v2.webp'; }
@@ -64,7 +116,8 @@ export function chooseEncouragement(phrases:string[],previous:string,random:()=>
     const unique=[...new Set(phrases)];const different=unique.filter(phrase=>phrase!==previous);const candidates=different.length?different:unique;
     return candidates[Math.floor(random()*candidates.length)]??starterEncouragements[0];
 }
-const recordFields = { categoryId: z.string().min(1).max(80), categoryLabel: z.string().trim().min(1).max(80), choice: z.enum(['plan', 'original']), mode: z.enum(['moment', 'reflection']), occurredAt: z.string().datetime().refine(v => new Date(v).getTime() <= Date.now() + 60000 && new Date(v).getFullYear() >= 2000, 'Choose a time in the past or present'), note: z.string().max(1000) };
+export const alternativeSchema = z.string().trim().min(1).max(180).optional();
+const recordFields = { alternative: alternativeSchema, categoryId: z.string().min(1).max(80), categoryLabel: z.string().trim().min(1).max(80), choice: z.enum(['plan', 'original']), mode: z.enum(['moment', 'reflection']), occurredAt: z.string().datetime().refine(v => new Date(v).getTime() <= Date.now() + 60000 && new Date(v).getFullYear() >= 2000, 'Choose a time in the past or present'), note: z.string().max(1000) };
 export const mutationSchema = z.discriminatedUnion('action', [
     z.object({ action: z.literal('record'), id: z.string().uuid(), ...recordFields }),
     z.object({ action: z.literal('edit'), id: z.string().uuid(), ...recordFields }),
@@ -111,4 +164,10 @@ export function timeline(entries: Entry[], anchor: Date, period: Period) {
         from = to;
     }
     return bins;
+}
+
+export function quickProgress(entries:Entry[],now=new Date()) {
+ const start=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+ const end=new Date(start);end.setDate(end.getDate()+1);
+ return {today:summarize(entries.filter(e=>new Date(e.occurredAt)>=start&&new Date(e.occurredAt)<end)),week:summarize(entriesInPeriod(entries,now,'week'))};
 }

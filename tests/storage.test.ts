@@ -22,3 +22,22 @@ test('old backup without phrase list remains importable',()=>{const {encourageme
 
 test('older backup imports seven directions and retains original food entry fields',async()=>{const {directionsVersion:_,...oldSettings}=defaults;const record={...choice(),categoryId:'seconds',categoryLabel:'Going for seconds',recordedAt:new Date().toISOString()};const backup=parseBackup(JSON.stringify({app:'steer',version:1,exportedAt:new Date().toISOString(),settings:{...oldSettings,categories:legacyCategories},entries:[record]}));await importBackup(backup,true);const journal=await readJournal();assert.equal(journal.settings.categories.length,7);assert.equal(journal.entries[0].categoryId,'seconds');assert.equal(journal.entries[0].categoryLabel,'Going for seconds');assert.equal(journal.entries[0].id,record.id);});
 test('editing a direction’s reminder remains saved after reload and backup',async()=>{const settings={...defaults,categories:defaults.categories.map(c=>c.id==='move-well'?{...c,encouragement:'Just start.',guidance:'Put on my shoes.'}:c)};await writeJournal({action:'settings',settings});const backup=parseBackup(JSON.stringify(makeBackup(await readJournal())));assert.equal(backup.settings.categories.find(c=>c.id==='move-well')?.guidance,'Put on my shoes.');});
+
+test('edited options and selected actions survive reload and backup restore',async()=>{
+ const settings={...defaults,categories:defaults.categories.map((c,i)=>({...c,alternatives:i===0?['Call my sister','Play piano']:[]}))};
+ await writeJournal({action:'settings',settings});
+ const value={...choice(),alternative:'Call my sister'};
+ await writeJournal(value);
+ let journal=await readJournal();
+ assert.deepEqual(journal.settings.categories[0].alternatives,['Call my sister','Play piano']);
+ assert.equal(journal.entries[0].alternative,'Call my sister');
+ const backup=parseBackup(JSON.stringify(makeBackup(journal)));
+ await writeJournal({action:'delete',id:value.id});
+ await writeJournal({action:'settings',settings:defaults});
+ await importBackup(backup,true);
+ journal=await readJournal();
+ assert.equal(journal.entries[0].alternative,'Call my sister');
+ assert.deepEqual(journal.settings.categories[1].alternatives,[]);
+ await writeJournal({...value,action:'edit',choice:'original'});
+ assert.equal((await readJournal()).entries[0].alternative,undefined);
+});
