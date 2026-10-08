@@ -55,3 +55,5 @@ Storage reference: [WebKit storage policy](https://webkit.org/blog/14403/updates
 Choose a goal, read a brief encouragement, and tap an alternative action. Review and explicitly save the choice to the local journal. The confirmation shows today’s and this week’s logged choices and choices toward the plan; these are decisions, not verified completed actions.
 
 Settings → My directions → Things I could do instead lets you edit, add, or remove alternatives for each goal (up to 30 per goal). The seven starter goals each include five options. Save my settings commits changes locally. Existing custom lists, including intentionally empty lists, are preserved. Selected action text is saved with each entry and included in local backups, even if the settings list changes later.
+
+Encouragements cycle in order with a brief anticipation, an offstage yank, and a settling entrance. Each stays readable for at least 6.5 seconds. Next and Pause controls are available. Cycling pauses while controls have focus, on mouse hover, and while the app is hidden; Reduce Motion disables automatic cycling and animation.

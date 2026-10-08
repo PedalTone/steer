@@ -8,3 +8,18 @@
 .alternatives-editor{margin-top:16px}.alternative-edit{padding:12px 0;border-bottom:1px solid #e4e9ee}.alternative-edit .field{margin-bottom:0}.alternative-edit textarea{min-height:76px}.alternative-edit .text-button{min-height:44px}.alternatives-editor>.secondary{margin-top:16px}
 
 .moment-options{margin:20px 0}.moment-options h2{text-align:left}.action-option{display:flex;justify-content:space-between;gap:12px;text-align:left;min-height:56px;margin:10px 0}.action-option svg{flex-shrink:0}.progress-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.progress-pair>div{padding:16px 10px;background:#f0f5f9;border-radius:14px;display:flex;flex-direction:column;gap:8px}.quick-progress{margin:24px 0}.quick-progress h2{font-size:21px}
+
+.encouragement-window{display:grid;overflow:hidden}.encouragement-window>*{grid-area:1/1;align-self:center}.encouragement-size{visibility:hidden;pointer-events:none;font-size:35px;font-weight:650;line-height:1.12;letter-spacing:-1.15px;margin:17px 0 20px}.encouragement-window .encouragement-message{margin:17px 0 20px}.encouragement-window>*{transform-origin:50% 65%}@media(max-width:360px){.encouragement-size{font-size:31px}}.encouragement-controls{display:flex;justify-content:center;flex-wrap:wrap;gap:0 12px}.encouragement-controls .text-button{font-size:14px;min-height:44px;margin:0;padding:8px}/* Anticipation, a sharp tug, then a short settling bounce. */
+.swish-out{animation:encouragement-out 340ms linear both}.swish-in{animation:encouragement-in 520ms linear both}
+@keyframes encouragement-out{
+ 0%{transform:translateX(0) rotate(0);opacity:1;animation-timing-function:ease-out}
+ 24%{transform:translateX(12px) rotate(1deg);opacity:1;animation-timing-function:cubic-bezier(.7,0,1,.4)}
+ 100%{transform:translateX(-120%) rotate(-5deg);opacity:0}
+}
+@keyframes encouragement-in{
+ 0%{transform:translateX(120%) rotate(5deg);opacity:0;animation-timing-function:cubic-bezier(.12,.75,.22,1)}
+ 68%{transform:translateX(-12px) rotate(-1deg);opacity:1;animation-timing-function:ease-in-out}
+ 86%{transform:translateX(4px) rotate(.35deg);opacity:1;animation-timing-function:ease-out}
+ 100%{transform:translateX(0) rotate(0);opacity:1}
+}
+@media(prefers-reduced-motion:reduce){.swish-out,.swish-in{animation:none}}
