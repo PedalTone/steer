@@ -34,3 +34,5 @@
 /* Warm encouragement accent, paired with the slate-blue navigation. */
 :root{--encouragement:#79617f}
 .encouragement-message,.home h1,.reminder>h1,.saved h1,.quick-progress h2,.why p{color:var(--encouragement)}
+
+.reminder .encouragement-window,.reminder>.eyebrow,.reminder>h1{text-align:left}
