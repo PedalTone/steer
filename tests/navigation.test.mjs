@@ -38,6 +38,9 @@ test('moment flow requires a goal selection before actions, then records the sel
   assert.equal(renderer.root.findAllByType('img').length,0);
   assert.equal(button('Next encouragement'),undefined);
   assert.equal(button('Pause cycling'),undefined);
+  assert.equal(button('Choose another step toward my plan'),undefined);
+  assert.equal(button('Continue as I was'),undefined);
+  assert.ok(!JSON.stringify(renderer.toJSON()).includes('Both choices count'));
   await act(async()=>options[0].props.onClick());
   assert.equal(renderer.root.findAllByProps({className:'review'}).length,1);
   assert.ok(JSON.stringify(renderer.toJSON()).includes('Eat Well'));
