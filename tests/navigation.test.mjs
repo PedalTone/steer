@@ -21,6 +21,7 @@ test('moment flow requires a goal selection before actions, then records the sel
   const {default:Steer}=await import(dir+'/Steer.js');
   await act(async()=>{renderer=create(React.createElement(Steer));});
   await act(async()=>{await new Promise(resolve=>setTimeout(resolve,40));});
+  assert.equal(renderer.root.findAllByProps({className:'build-info'}).length,1);
   const textOf=(node)=>typeof node==='string'?node:Array.isArray(node)?node.map(textOf).join(' '):node?.props?textOf(node.props.children):'';
   const button=(text)=>renderer.root.findAllByType('button').find(b=>textOf(b.props.children).includes(text));
   await act(async()=>button('I’m in a moment').props.onClick());
@@ -42,4 +43,21 @@ test('moment flow requires a goal selection before actions, then records the sel
   assert.ok(JSON.stringify(renderer.toJSON()).includes('Eat Well'));
   assert.ok(JSON.stringify(renderer.toJSON()).includes('Pause and check whether I’m hungry'));
  } finally {if(renderer)await act(async()=>renderer.unmount());await rm(dir,{recursive:true,force:true});}
+});
+
+test('an activated update waits until unsaved screens are left before reloading',async()=>{
+ const dir=await mkdtemp(new URL('../.update-test-',import.meta.url));let renderer,reloads=0;
+ const handlers=new Map();
+ const sw={controller:{},register:async()=>({active:{},update:async()=>{},addEventListener(){}}),addEventListener:(event,handler)=>handlers.set(event,handler),removeEventListener:event=>handlers.delete(event)};
+ Object.defineProperty(navigator,'serviceWorker',{value:sw,configurable:true});
+ Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true,window:{location:{reload(){reloads++;}},addEventListener(){},removeEventListener(){}}});
+ try{
+  const source=await readFile(new URL('../src/OfflineStatus.tsx',import.meta.url),'utf8');
+  const output=ts.transpileModule(source,{compilerOptions:{jsx:ts.JsxEmit.ReactJSX,module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replaceAll('import.meta.env.PROD','true');
+  await writeFile(dir+'/OfflineStatus.js',output);const {default:Status}=await import(dir+'/OfflineStatus.js');
+  await act(async()=>{renderer=create(React.createElement(Status,{visible:false,canReload:false}));});
+  await act(async()=>handlers.get('controllerchange')());assert.equal(reloads,0);
+  assert.ok(JSON.stringify(renderer.toJSON()).includes('Save your changes'));
+  await act(async()=>renderer.update(React.createElement(Status,{visible:false,canReload:true})));assert.equal(reloads,1);
+ }finally{if(renderer)await act(async()=>renderer.unmount());delete navigator.serviceWorker;await rm(dir,{recursive:true,force:true});}
 });

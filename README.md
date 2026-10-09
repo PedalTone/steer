@@ -58,6 +58,8 @@ Settings → My directions → Things I could do instead lets you edit, add, or 
 
 Encouragements cycle automatically with a brief anticipation, an offstage yank, and a settling entrance. Each stays readable for at least 6.5 seconds. There are no carousel controls on the action screen. Reduce Motion disables automatic cycling and animation.
 
-App updates activate after the complete new shell has downloaded, even with other Steer windows open. Existing pages are never forcibly reloaded, preserving unsaved form state. Refresh after saving to load the new version. A failed download leaves the previous offline app available. Updates do not modify IndexedDB journal data.
+App updates activate after the complete new shell has downloaded, even with other Steer windows open. The home and goal-selection screens reload automatically when an update activates. Screens with forms or an active decision wait until you save and return to My day, preserving unsaved state. A failed download leaves the previous offline app available. Updates do not modify IndexedDB journal data.
 
 Goals use colorful native emoji icons on pastel tiles. The character appears only on the splash screen. The compact action screen places five starter options directly below a smaller encouragement; longer custom lists or larger accessibility text can still scroll. Notes and reminders are available below the choices.
+
+The splash screen shows the package version and actual build timestamp in the device’s local time zone. These identify the loaded app, not the time the page was opened.

@@ -5,3 +5,5 @@ Choice flow: situation → encouragement → choose → review and explicitly sa
 Weekly periods start Monday, using device time. Report logged decisions rather than inferred behavior. Both choices count; use supportive language.
 Do not use Codex's built-in browser for routine inspection; the user checks visuals in external Safari or Chrome. Verify builds, storage, and offline packaging with non-browser checks.
 Do not publish journal backups or browser database contents to GitHub. Do not change the older Sites app or erase its data as part of this separate static build.
+
+For each published release, bump package.json and package-lock.json versions. Keep the splash-screen version and build timestamp visible; the timestamp is generated at build time, not page load.
