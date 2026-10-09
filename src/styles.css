@@ -36,3 +36,5 @@
 .encouragement-message,.home h1,.reminder>h1,.saved h1,.quick-progress h2,.why p{color:var(--encouragement)}
 
 .reminder .encouragement-window,.reminder>.eyebrow,.reminder>h1{text-align:left}
+
+.file-save{text-align:left;border:1px solid var(--line);border-radius:16px;padding:18px;margin:20px 0}.file-save h2{margin:0 0 8px}.file-save>p{font-size:16px;margin:0 0 12px}.file-save>p.small{font-size:13px;margin:10px 0 0}

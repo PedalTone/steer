@@ -42,6 +42,24 @@ test('moment flow requires a goal selection before actions, then records the sel
   assert.equal(renderer.root.findAllByProps({className:'review'}).length,1);
   assert.ok(JSON.stringify(renderer.toJSON()).includes('Eat Well'));
   assert.ok(JSON.stringify(renderer.toJSON()).includes('Pause and check whether I’m hungry'));
+  await act(async()=>button('Save to my journal').props.onClick());
+  await act(async()=>{await new Promise(resolve=>setTimeout(resolve,40));});
+  assert.ok(button('Save journal to Files'));
+  let offered;
+  Object.defineProperty(navigator,'canShare',{value:()=>true,configurable:true});
+  Object.defineProperty(navigator,'share',{value:async data=>{offered=data.files[0];throw new DOMException('Canceled','AbortError');},configurable:true});
+  await act(async()=>button('Save journal to Files').props.onClick());
+  assert.ok(JSON.stringify(renderer.toJSON()).includes('File save canceled'));
+  const contents=JSON.parse(await offered.text());
+  assert.equal(contents.entries.length,1);
+  assert.equal(contents.entries[0].alternative,'Pause and check whether I’m hungry');
+  assert.equal(contents.settings.categories.length,7);
+  assert.match(offered.name,/^steer-journal-.*\.json$/);
+  Object.defineProperty(navigator,'share',{value:async()=>{},configurable:true});
+  await act(async()=>button('Save journal to Files').props.onClick());
+  assert.ok(JSON.stringify(renderer.toJSON()).includes('Check Files to confirm'));
+  delete navigator.canShare;delete navigator.share;
+
  } finally {if(renderer)await act(async()=>renderer.unmount());await rm(dir,{recursive:true,force:true});}
 });
 
