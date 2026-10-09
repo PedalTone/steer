@@ -65,3 +65,5 @@ Goals use colorful native emoji icons on pastel tiles. The character appears onl
 The splash screen shows the package version and actual build timestamp in the device’s local time zone. These identify the loaded app, not the time the page was opened.
 
 Version 1.2.0 adds 91 approved encouragements: 13 for each of the seven goals. Each goal cycles its own list after its opening encouragement, without duplicate phrases in a cycle. Settings → My directions → Encouragement phrases supports editing, adding, and removing phrases. Missing lists receive the catalog on migration; existing lists and deliberately empty lists are preserved. Empty lists use the general encouragement bank. Goal phrases stay local and are included in backups.
+
+Version 1.2.1 introduces a muted plum encouragement accent (#79617f) for rotating phrases, welcome and saved-choice headings, progress encouragement, and life-goal reminders. Navigation and action buttons retain slate blue.
