@@ -41,3 +41,10 @@ test('edited options and selected actions survive reload and backup restore',asy
  await writeJournal({...value,action:'edit',choice:'original'});
  assert.equal((await readJournal()).entries[0].alternative,undefined);
 });
+
+test('goal phrase edits and intentionally empty lists survive local backup restore',async()=>{
+ const settings={...defaults,categories:defaults.categories.map((c,i)=>({...c,phrases:i===0?['My personal reminder.']:[]}))};
+ await writeJournal({action:'settings',settings});const backup=parseBackup(JSON.stringify(makeBackup(await readJournal())));
+ await writeJournal({action:'settings',settings:defaults});await importBackup(backup,true);
+ const restored=await readJournal();assert.deepEqual(restored.settings.categories[0].phrases,['My personal reminder.']);assert.deepEqual(restored.settings.categories[1].phrases,[]);
+});

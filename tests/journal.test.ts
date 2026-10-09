@@ -17,7 +17,7 @@ test('encouragement selection avoids an immediate repeat and supports a single p
 test('phrase lists require at least one nonempty option',()=>{for(const encouragements of [[],[' '],Array(21).fill('Too many')])assert.equal(settingsSchema.safeParse({...defaults,encouragements}).success,false);});
 
 test('Pause has exactly the seven approved positive directions',()=>{assert.deepEqual(defaults.categories.map(c=>c.label),['Be Present','Eat Well','Rest Well','Be Kind to Myself','Start My Day','Use My Time Well','Move Well']);assert.ok(defaults.categories.every(c=>c.encouragement&&c.guidance));});
-test('legacy buttons merge into Eat Well while retaining custom directions and visibility',()=>{const {directionsVersion:_,...old}=defaults;const custom={id:'custom',label:'Make music',image:'splash-recipe-v2.webp',active:true};const migrated=settingsSchema.parse({...old,categories:[...legacyCategories.map(c=>({...c,active:c.id!=='scrolling'})),custom]});assert.equal(migrated.categories.length,8);assert.equal(migrated.categories.filter(c=>c.label==='Eat Well').length,1);assert.equal(migrated.categories.find(c=>c.id==='scrolling')?.active,false);assert.deepEqual(migrated.categories.at(-1),{...custom,alternatives:[]});assert.deepEqual(settingsSchema.parse(migrated),migrated);});
+test('legacy buttons merge into Eat Well while retaining custom directions and visibility',()=>{const {directionsVersion:_,...old}=defaults;const custom={id:'custom',label:'Make music',image:'splash-recipe-v2.webp',active:true};const migrated=settingsSchema.parse({...old,categories:[...legacyCategories.map(c=>({...c,active:c.id!=='scrolling'})),custom]});assert.equal(migrated.categories.length,8);assert.equal(migrated.categories.filter(c=>c.label==='Eat Well').length,1);assert.equal(migrated.categories.find(c=>c.id==='scrolling')?.active,false);assert.deepEqual(migrated.categories.at(-1),{...custom,alternatives:[],phrases:[]});assert.deepEqual(settingsSchema.parse(migrated),migrated);});
 test('all hidden food buttons produce a hidden combined button',()=>{const {directionsVersion:_,...old}=defaults;const upgraded=settingsSchema.parse({...old,categories:legacyCategories.map(c=>({...c,active:!foodIds.has(c.id)}))});assert.equal(upgraded.categories.find(c=>c.id==='eat-well')?.active,false);});
 test('historical food entries aggregate with new entries without mutating their originals',()=>{const rows=['seconds','junk-food','unplanned-eating','eat-well'].map((id,i)=>({...entry('2026-10-01T12:00:00',i===0?'original':'plan'),categoryId:id,categoryLabel:id}));const copy=structuredClone(rows);const report=entriesByDirection(rows,defaults.categories);assert.ok(report.every(e=>e.categoryId==='eat-well'&&e.categoryLabel==='Eat Well'));assert.deepEqual(summarize(report),{total:4,plan:3,original:1,rate:75});assert.deepEqual(rows,copy);});
 test('specific guidance starts with the approved reminder; custom directions have a fallback',()=>{const move=defaults.categories.find(c=>c.id==='move-well')!;assert.equal(guidanceFor(move,defaults).encouragement,'You don’t have to feel motivated to begin.');assert.match(guidanceFor(move,defaults).guidance,/Put on your workout clothes/);assert.equal(guidanceFor({id:'custom',label:'Create',image:'',active:true},defaults).guidance,defaults.reminder);});
@@ -32,4 +32,16 @@ test('missing alternatives receive five defaults without replacing edited or emp
  assert.deepEqual(customized.categories[1].alternatives,[]);
  assert.deepEqual(customized.categories[2].alternatives,[]);
  assert.equal(settingsSchema.safeParse({...defaults,categories:[{...defaults.categories[0],alternatives:[' ']}]}).success,false);
+});
+
+test('all 91 catalog phrases migrate once and stay within their goals',async()=>{
+ const {phraseCatalog}=await import('../src/phraseCatalog.ts');const {phrasesFor}=await import('../src/journal.ts');
+ assert.equal(Object.values(phraseCatalog).flat().length,91);
+ assert.ok(Object.values(phraseCatalog).every(list=>list.length===13&&new Set(list).size===13));
+ const old={...defaults,categories:defaults.categories.map(({phrases,...c})=>c)};
+ const migrated=settingsSchema.parse(old);
+ for(const c of migrated.categories){assert.deepEqual(c.phrases,phraseCatalog[c.id]);const bank=phrasesFor(c,migrated);for(const phrase of phraseCatalog[c.id])assert.ok(bank.includes(phrase));assert.equal(new Set(bank).size,bank.length);}
+ const changed={...migrated,categories:migrated.categories.map((c,i)=>({...c,phrases:i===0?['My own words']:[]}))};
+ const parsed=settingsSchema.parse(changed);assert.deepEqual(parsed.categories[0].phrases,['My own words']);assert.deepEqual(parsed.categories[1].phrases,[]);assert.deepEqual(settingsSchema.parse(parsed),parsed);
+ assert.equal(settingsSchema.safeParse({...defaults,categories:[{...defaults.categories[0],phrases:[' ']}]}).success,false);
 });

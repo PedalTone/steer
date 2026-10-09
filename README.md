@@ -63,3 +63,5 @@ App updates activate after the complete new shell has downloaded, even with othe
 Goals use colorful native emoji icons on pastel tiles. The character appears only on the splash screen. The compact action screen places five starter options directly below a smaller encouragement; longer custom lists or larger accessibility text can still scroll. Notes and reminders are available below the choices.
 
 The splash screen shows the package version and actual build timestamp in the device’s local time zone. These identify the loaded app, not the time the page was opened.
+
+Version 1.2.0 adds 91 approved encouragements: 13 for each of the seven goals. Each goal cycles its own list after its opening encouragement, without duplicate phrases in a cycle. Settings → My directions → Encouragement phrases supports editing, adding, and removing phrases. Missing lists receive the catalog on migration; existing lists and deliberately empty lists are preserved. Empty lists use the general encouragement bank. Goal phrases stay local and are included in backups.

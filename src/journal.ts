@@ -1,3 +1,4 @@
+import {phraseCatalog} from './phraseCatalog.ts';
 import { z } from 'zod';
 export const starterEncouragements = [
     'You can make the harder choice.',
@@ -67,14 +68,14 @@ export const defaultAlternatives: Record<string,string[]> = {
     "Do a shorter version of my planned workout"
   ]
 };
-export const categorySchema = z.object({id:z.string().min(1).max(80),label:z.string().trim().min(1).max(80),image:z.string().max(80),active:z.boolean(),encouragement:z.string().trim().max(140).optional(),guidance:z.string().trim().max(500).optional(),alternatives:z.array(z.string().trim().min(1, "Write an option or remove the empty one.").max(180)).max(30).optional()});
+export const categorySchema = z.object({id:z.string().min(1).max(80),label:z.string().trim().min(1).max(80),image:z.string().max(80),active:z.boolean(),phrases:z.array(z.string().trim().min(1,"Write a phrase or remove the empty one.").max(140)).max(40).optional(),encouragement:z.string().trim().max(140).optional(),guidance:z.string().trim().max(500).optional(),alternatives:z.array(z.string().trim().min(1, "Write an option or remove the empty one.").max(180)).max(30).optional()});
 type StoredCategory=z.infer<typeof categorySchema>;
 function upgradeDirections(categories:StoredCategory[]):StoredCategory[]{
  const oldIds=new Set(legacyCategories.map(c=>c.id));
  const upgraded=directionDefinitions.map(direction=>{
   const existing=categories.find(c=>c.id===direction.id);
   const oldFood=categories.filter(c=>foodIds.has(c.id));
-  return {...direction,alternatives:existing?.alternatives,active:existing?.active??(direction.id==='eat-well'&&oldFood.length?oldFood.some(c=>c.active):true),...(existing?.encouragement?{encouragement:existing.encouragement}:{}),...(existing?.guidance?{guidance:existing.guidance}:{})};
+  return {...direction,phrases:existing?.phrases,alternatives:existing?.alternatives,active:existing?.active??(direction.id==='eat-well'&&oldFood.length?oldFood.some(c=>c.active):true),...(existing?.encouragement?{encouragement:existing.encouragement}:{}),...(existing?.guidance?{guidance:existing.guidance}:{})};
  });
  return [...upgraded,...categories.filter(c=>!oldIds.has(c.id)&&!directionDefinitions.some(d=>d.id===c.id))];
 }
@@ -86,7 +87,7 @@ export const settingsSchema = z.object({
     outcomes: z.string().trim().min(1).max(300),
     recipe: z.array(z.object({ title: z.string().trim().min(1).max(120), detail: z.string().max(400) })).length(4),
     categories: z.array(categorySchema).min(1).max(60).refine(a => new Set(a.map(x => x.id)).size === a.length, 'Choices must have unique IDs')
-}).transform(settings => ({...settings,directionsVersion:1 as const,categories:(settings.directionsVersion===1?settings.categories:upgradeDirections(settings.categories)).map((c):StoredCategory=>({...c,alternatives:c.alternatives??[...(defaultAlternatives[c.id]??[])]})), encouragements: settings.encouragements ?? [settings.headline, ...starterEncouragements.filter(phrase => phrase !== settings.headline)]}));
+}).transform(settings => ({...settings,directionsVersion:1 as const,categories:(settings.directionsVersion===1?settings.categories:upgradeDirections(settings.categories)).map((c):StoredCategory=>({...c,phrases:c.phrases??[...(phraseCatalog[c.id]??[])],alternatives:c.alternatives??[...(defaultAlternatives[c.id]??[])]})), encouragements: settings.encouragements ?? [settings.headline, ...starterEncouragements.filter(phrase => phrase !== settings.headline)]}));
 export type Settings = z.infer<typeof settingsSchema>;
 export type Category = Settings['categories'][number];
 export type Entry = {
@@ -107,7 +108,7 @@ export const defaults: Settings = {
     reminder: 'It may feel hard right now. Think about how proud you’ll feel afterward. One choice, right now.',
     outcomes: 'Sharp mind. Happy mind.\nHealthy body. Long life.',
     recipe: [{ title: 'Get plenty of rest.', detail: '' }, { title: 'Get up and move.', detail: 'Do my workout, prioritize strength, move daily, and stay on schedule.' }, { title: 'Eat protein + fiber.', detail: 'Limit junk food. Eat sensible portions.' }, { title: 'Practice self-control.', detail: 'Pause, remember my plan, and choose deliberately.' }],
-    categories: directionDefinitions.map(direction=>({...direction,active:true,alternatives:[...defaultAlternatives[direction.id]]}))
+    categories: directionDefinitions.map(direction=>({...direction,active:true,phrases:[...phraseCatalog[direction.id]],alternatives:[...defaultAlternatives[direction.id]]}))
 };
 export const knownImages = new Set([...defaults.categories,...legacyCategories].map(c => c.image));
 export function imageFor(category: Category) { return knownImages.has(category.image) ? `./illustrations/${category.image}` : './illustrations/splash-recipe-v2.webp'; }
@@ -171,3 +172,5 @@ export function quickProgress(entries:Entry[],now=new Date()) {
  const end=new Date(start);end.setDate(end.getDate()+1);
  return {today:summarize(entries.filter(e=>new Date(e.occurredAt)>=start&&new Date(e.occurredAt)<end)),week:summarize(entriesInPeriod(entries,now,'week'))};
 }
+
+export function phrasesFor(category:Category,settings:Settings){return [...new Set([category.encouragement,...(category.phrases?.length?category.phrases:settings.encouragements)].filter((value):value is string=>Boolean(value)))];}
