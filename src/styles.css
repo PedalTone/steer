@@ -42,3 +42,5 @@
 .progress-pair .good-count{font-size:36px;line-height:1.1;color:var(--encouragement)}.saved{padding-top:12px!important}.saved .saved-mark{width:48px;height:48px;margin-bottom:14px}.saved h1{font-size:30px}.saved .chosen-step{font-size:18px;font-weight:600;margin:16px 0}.home .quick-progress{margin-top:24px}.moment-options>.small{margin:0 0 10px}
 
 .saved .file-save{border:0;padding:0;margin:16px 0}.saved .file-save .primary{margin:0}.saved .file-save .small{text-align:center}
+
+.splash-landscape{display:block;width:100%;height:auto;aspect-ratio:1672/941;object-fit:contain;border-radius:16px;margin:0 auto 20px}.home h1{margin-top:12px}

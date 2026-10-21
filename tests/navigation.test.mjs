@@ -9,7 +9,7 @@ import {act,create} from 'react-test-renderer';
 test('moment flow requires a goal selection before actions, then records the selected goal',async()=>{
  const dir=await mkdtemp(new URL('../.navigation-test-',import.meta.url));
  let renderer;
- Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true,window:{scrollTo(){},addEventListener(){},removeEventListener(){},matchMedia(){return {matches:false,addEventListener(){},removeEventListener(){}}}},document:{hidden:false,addEventListener(){},removeEventListener(){}}});
+ Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true,window:{setInterval,clearInterval,scrollTo(){},addEventListener(){},removeEventListener(){},matchMedia(){return {matches:false,addEventListener(){},removeEventListener(){}}}},document:{hidden:false,addEventListener(){},removeEventListener(){}}});
  try {
   for(const file of await readdir(new URL('../src/',import.meta.url))){
    if(!/\.tsx?$/.test(file))continue;

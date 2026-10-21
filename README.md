@@ -73,3 +73,5 @@ Version 1.3.0 adds Save journal to Files after every saved decision. It exports 
 Version 1.4.0 simplifies live moments: choose a goal, pause, then tap an action to save directly. Confirmation appears only after the database commit; retries use the same entry ID. Good-choice counts for today and the Monday-based week appear immediately and on the home screen. Trends provides Day and Week views. File export is optional under a disclosure; earlier reflections retain review before saving. Counts represent logged decisions, not verified completed actions.
 
 Version 1.4.1 places Save journal to Files directly below the confirmed action in Pause, without a disclosure. Settings contains Restore my journal only; file export is no longer duplicated there.
+
+Version 1.4.2 replaces the splash character with the supplied tree landscapes. The bright image appears 06:00–17:59 and the moonlit image 18:00–05:59 in the device’s local time. It updates while open and when returning to the app. Both original images are included in the offline cache.
