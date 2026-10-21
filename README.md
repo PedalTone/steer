@@ -75,3 +75,5 @@ Version 1.4.0 simplifies live moments: choose a goal, pause, then tap an action 
 Version 1.4.1 places Save journal to Files directly below the confirmed action in Pause, without a disclosure. Settings contains Restore my journal only; file export is no longer duplicated there.
 
 Version 1.4.2 replaces the splash character with the supplied tree landscapes. The bright image appears 06:00–17:59 and the moonlit image 18:00–05:59 in the device’s local time. It updates while open and when returning to the app. Both original images are included in the offline cache.
+
+Version 1.5.0 makes My Day the fastest entry point. The time-based landscape becomes a compact banner, daily and weekly good-choice counts sit beside the prompt, and every active goal appears in a four-column icon grid. Tapping a goal opens its encouragement and next steps directly. Earlier-choice recording, the recipe, and build information remain available below More. The dashboard is sized for the iPhone 17 Pro Max viewport without scrolling at the default text size.

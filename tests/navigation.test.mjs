@@ -6,7 +6,7 @@ import ts from 'typescript';
 import React from 'react';
 import {act,create} from 'react-test-renderer';
 
-test('moment flow requires a goal selection before actions, then records the selected goal',async()=>{
+test('My Day shows every goal and opens its actions directly',async()=>{
  const dir=await mkdtemp(new URL('../.navigation-test-',import.meta.url));
  let renderer;
  Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true,window:{setInterval,clearInterval,scrollTo(){},addEventListener(){},removeEventListener(){},matchMedia(){return {matches:false,addEventListener(){},removeEventListener(){}}}},document:{hidden:false,addEventListener(){},removeEventListener(){}}});
@@ -24,14 +24,13 @@ test('moment flow requires a goal selection before actions, then records the sel
   assert.equal(renderer.root.findAllByProps({className:'build-info'}).length,1);
   const textOf=(node)=>typeof node==='string'?node:Array.isArray(node)?node.map(textOf).join(' '):node?.props?textOf(node.props.children):'';
   const button=(text)=>renderer.root.findAllByType('button').find(b=>textOf(b.props.children).includes(text));
-  await act(async()=>button('I’m in a moment').props.onClick());
-  let cards=renderer.root.findAllByProps({className:'choice-card'});
+  let cards=renderer.root.findAllByProps({className:'home-goal'});
   assert.equal(cards.length,7);
-  assert.equal(renderer.root.findAllByType('img').length,0);
+  assert.equal(renderer.root.findAllByType('img').length,1);
   assert.equal(renderer.root.findAllByProps({className:'goal-icon'}).length,7);
   assert.equal(renderer.root.findAllByProps({className:'moment-options'}).length,0);
   await act(async()=>cards.find(c=>textOf(c.props.children).includes('Eat Well')).props.onClick());
-  assert.equal(renderer.root.findAllByProps({className:'choice-card'}).length,0);
+  assert.equal(renderer.root.findAllByProps({className:'home-goal'}).length,0);
   assert.equal(renderer.root.findAllByProps({className:'moment-options'}).length,1);
   const options=renderer.root.findAllByProps({className:'secondary action-option'});
   assert.equal(options.length,5);
