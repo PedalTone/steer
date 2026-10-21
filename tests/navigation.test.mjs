@@ -48,6 +48,8 @@ test('moment flow requires a goal selection before actions, then records the sel
   assert.deepEqual(renderer.root.findAllByProps({className:'good-count'}).map(node=>node.props.children),[1,1]);
   assert.ok(JSON.stringify(renderer.toJSON()).includes('Pause and check whether I’m hungry'));
   assert.ok(button('Save journal to Files'));
+  assert.equal(button('Save journal to Files').findAllByType('details').length,0);
+  let ancestor=button('Save journal to Files').parent;while(ancestor){assert.notEqual(ancestor.type,'details');ancestor=ancestor.parent;}
   let offered;
   Object.defineProperty(navigator,'canShare',{value:()=>true,configurable:true});
   Object.defineProperty(navigator,'share',{value:async data=>{offered=data.files[0];throw new DOMException('Canceled','AbortError');},configurable:true});
@@ -66,6 +68,10 @@ test('moment flow requires a goal selection before actions, then records the sel
   assert.equal(button('Day').props['aria-pressed'],true);
   await act(async()=>button('Week').props.onClick());
   assert.equal(button('Week').props['aria-pressed'],true);
+  await act(async()=>button('Settings').props.onClick());
+  assert.equal(button('Export backup to Files'),undefined);
+  assert.equal(button('Save journal to Files'),undefined);
+  assert.ok(JSON.stringify(renderer.toJSON()).includes('Restore my journal'));
 
  } finally {if(renderer)await act(async()=>renderer.unmount());await rm(dir,{recursive:true,force:true});}
 });

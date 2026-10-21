@@ -71,3 +71,5 @@ Version 1.2.1 introduces a muted plum encouragement accent (#79617f) for rotatin
 Version 1.3.0 adds Save journal to Files after every saved decision. It exports a timestamped JSON snapshot of all committed entries and settings. On iPhone choose Save to Files → On My iPhone. Saving requires a user tap and confirmation; Steer cannot confirm the final file destination or silently overwrite an existing file. Canceling leaves the IndexedDB journal intact and allows retry.
 
 Version 1.4.0 simplifies live moments: choose a goal, pause, then tap an action to save directly. Confirmation appears only after the database commit; retries use the same entry ID. Good-choice counts for today and the Monday-based week appear immediately and on the home screen. Trends provides Day and Week views. File export is optional under a disclosure; earlier reflections retain review before saving. Counts represent logged decisions, not verified completed actions.
+
+Version 1.4.1 places Save journal to Files directly below the confirmed action in Pause, without a disclosure. Settings contains Restore my journal only; file export is no longer duplicated there.
