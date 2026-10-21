@@ -60,3 +60,19 @@
 .home-dashboard .home-goal{min-height:92px;padding-inline:2px;border-color:#dce3e9;border-radius:12px}
 .home-dashboard .home-links{border-top:1px solid #d5dde5;margin-top:12px;padding-top:2px}
 @media(max-height:850px){.shell:has(.home-dashboard)>header{height:54px}.home-dashboard .splash-landscape{height:40px}.home-dashboard .home-goal{min-height:84px}.home-dashboard .home-links{margin-top:6px}.home-life{margin-top:10px;padding:10px 12px}.home-outcomes{font-size:18px;margin-bottom:9px}.home-recipe{gap:9px 12px;padding-top:9px}}
+.shell:has(.home-dashboard){padding-top:calc(env(safe-area-inset-top) + 12px);padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+.home.home-dashboard{min-height:calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 96px);display:flex;flex-direction:column;gap:10px;padding:0}
+.home.home-dashboard .splash-landscape{height:auto;aspect-ratio:1672/941;object-fit:contain;margin:0;flex-shrink:0}
+.home-dashboard .home-heading{display:block;text-align:center}
+.home-dashboard .home-heading h1{font-size:23px;line-height:1.15;margin:0}
+.home-dashboard>.quick-progress{margin:0;align-self:center;width:240px}
+.home-dashboard .compact-progress .progress-pair>div{flex-direction:row;align-items:center;justify-content:center;gap:8px;padding:8px}
+.home-dashboard .compact-progress .progress-pair span{font-size:12px}
+.home-dashboard .compact-progress .good-count{font-size:25px}
+.home.home-dashboard .home-goals{margin:0;flex-grow:1;gap:8px}
+.home.home-dashboard .home-goal{min-height:90px;padding:8px 2px}
+.home.home-dashboard .home-life{margin:0;padding:12px 14px}
+.home-dashboard .home-life .eyebrow{font-size:11px;margin-bottom:10px}
+.home-dashboard .home-recipe{border-top:0;padding-top:0;gap:12px}
+.home-dashboard .home-recipe>div{font-size:14px}
+.home.home-dashboard .home-links{border:0;margin:0;padding:0}
