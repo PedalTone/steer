@@ -41,12 +41,12 @@ test('moment flow requires a goal selection before actions, then records the sel
   assert.equal(button('Choose another step toward my plan'),undefined);
   assert.equal(button('Continue as I was'),undefined);
   assert.ok(!JSON.stringify(renderer.toJSON()).includes('Both choices count'));
-  await act(async()=>options[0].props.onClick());
-  assert.equal(renderer.root.findAllByProps({className:'review'}).length,1);
-  assert.ok(JSON.stringify(renderer.toJSON()).includes('Eat Well'));
-  assert.ok(JSON.stringify(renderer.toJSON()).includes('Pause and check whether I’m hungry'));
-  await act(async()=>button('Save to my journal').props.onClick());
+  await act(async()=>{options[0].props.onClick();options[0].props.onClick();});
   await act(async()=>{await new Promise(resolve=>setTimeout(resolve,40));});
+  assert.equal(renderer.root.findAllByProps({className:'review'}).length,0);
+  assert.equal(renderer.root.findAllByProps({className:'saved'}).length,1);
+  assert.deepEqual(renderer.root.findAllByProps({className:'good-count'}).map(node=>node.props.children),[1,1]);
+  assert.ok(JSON.stringify(renderer.toJSON()).includes('Pause and check whether I’m hungry'));
   assert.ok(button('Save journal to Files'));
   let offered;
   Object.defineProperty(navigator,'canShare',{value:()=>true,configurable:true});
@@ -62,6 +62,10 @@ test('moment flow requires a goal selection before actions, then records the sel
   await act(async()=>button('Save journal to Files').props.onClick());
   assert.ok(JSON.stringify(renderer.toJSON()).includes('Check Files to confirm'));
   delete navigator.canShare;delete navigator.share;
+  await act(async()=>button('My day & week').props.onClick());
+  assert.equal(button('Day').props['aria-pressed'],true);
+  await act(async()=>button('Week').props.onClick());
+  assert.equal(button('Week').props['aria-pressed'],true);
 
  } finally {if(renderer)await act(async()=>renderer.unmount());await rm(dir,{recursive:true,force:true});}
 });

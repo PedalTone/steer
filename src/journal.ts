@@ -130,24 +130,25 @@ export function entriesByDirection(entries:Entry[],categories:Category[]):Entry[
  return entries.map(entry=>{const categoryId=foodIds.has(entry.categoryId)?'eat-well':entry.categoryId;const category=categories.find(c=>c.id===categoryId)??directionDefinitions.find(c=>c.id===categoryId);return {...entry,categoryId,categoryLabel:category?.label??entry.categoryLabel};});
 }
 export function guidanceFor(category:Category,settings:Settings){return {encouragement:category.encouragement||settings.headline,guidance:category.guidance||settings.reminder};}
-export type Period = 'week' | 'month';
+export type Period = 'day' | 'week' | 'month';
 export function periodBounds(anchor: Date, period: Period) {
     const start = new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate());
     if (period === 'week')
         start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
-    else
+    else if(period==='month')
         start.setDate(1);
     const end = new Date(start);
     if (period === 'week')
         end.setDate(end.getDate() + 7);
-    else
+    else if(period==='month')
         end.setMonth(end.getMonth() + 1);
+    else end.setDate(end.getDate()+1);
     return { start, end };
 }
 export function shiftPeriod(anchor: Date, period: Period, n: number) { const { start } = periodBounds(anchor, period); if (period === 'week')
     start.setDate(start.getDate() + 7 * n);
-else
-    start.setMonth(start.getMonth() + n); return start; }
+else if(period==='month')
+    start.setMonth(start.getMonth() + n);else start.setDate(start.getDate()+n); return start; }
 export function entriesInPeriod(entries: Entry[], anchor: Date, period: Period) { const { start, end } = periodBounds(anchor, period); return entries.filter(e => { const t = new Date(e.occurredAt); return t >= start && t < end; }); }
 export function summarize(entries: Entry[]) { const plan = entries.filter(e => e.choice === 'plan').length; return { total: entries.length, plan, original: entries.length - plan, rate: entries.length ? Math.round(plan / entries.length * 100) : null }; }
 export function localInput(date: Date) { const d = new Date(date.getTime() - date.getTimezoneOffset() * 60000); return d.toISOString().slice(0, 16); }
