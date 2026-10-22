@@ -31,6 +31,7 @@ test('My Day shows every goal and opens its actions directly',async()=>{
   assert.equal(renderer.root.findAllByProps({className:'daily-check'}).length,0);
   assert.equal(renderer.root.findAllByProps({className:'home-goal is-complete'}).length,0);
   assert.equal(renderer.root.findAllByProps({className:'moment-options'}).length,0);
+  assert.equal(renderer.root.findAllByProps({className:'quick-progress'}).length,0);
   for(const card of cards){
    const label=card.props['aria-label'];
    await act(async()=>card.props.onClick({currentTarget:{focus(){}}}));
@@ -56,7 +57,7 @@ test('My Day shows every goal and opens its actions directly',async()=>{
   assert.equal(renderer.root.findAllByProps({className:'review'}).length,0);
   assert.equal(renderer.root.findAllByProps({className:'quick-dialog'}).length,0);
   assert.equal(renderer.root.findAllByProps({className:'home-goal is-complete'}).length,1);
-  assert.deepEqual(renderer.root.findAllByProps({className:'good-count'}).map(node=>node.props.children),[1,1]);
+  assert.equal(renderer.root.findAllByProps({className:'good-count'}).length,0);
   assert.ok(JSON.stringify(renderer.toJSON()).includes('Eat Well saved.'));
   assert.ok(button('Save journal to Files'));
   assert.equal(button('Save journal to Files').findAllByType('details').length,0);
@@ -78,10 +79,12 @@ test('My Day shows every goal and opens its actions directly',async()=>{
   const chosen=renderer.root.findAllByProps({className:'home-goal is-complete'});
   assert.equal(chosen.length,1);
   assert.ok(textOf(chosen[0].props.children).includes('Eat Well'));
-  await act(async()=>button('Trends').props.onClick());
-  assert.equal(button('Day').props['aria-pressed'],true);
-  await act(async()=>button('Week').props.onClick());
-  assert.equal(button('Week').props['aria-pressed'],true);
+  await act(async()=>button('Journal').props.onClick());
+  assert.ok(JSON.stringify(renderer.toJSON()).includes('Moments I chose.'));
+  assert.equal(renderer.root.findAllByProps({className:'journal-day'}).length,1);
+  assert.equal(button('Day'),undefined);
+  assert.equal(button('Week'),undefined);
+  assert.equal(renderer.root.findAllByProps({className:'stats'}).length,0);
   await act(async()=>button('Settings').props.onClick());
   assert.equal(button('Export backup to Files'),undefined);
   assert.equal(button('Save journal to Files'),undefined);

@@ -104,3 +104,5 @@
 .home.home-dashboard{min-height:calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 76px)}
 .shell .utility-nav{position:static;transform:none;width:auto;max-width:none;display:flex;justify-content:flex-end;gap:10px;border:0;background:transparent;padding:0 4px;min-height:40px;box-shadow:none}
 .shell .utility-nav button{display:flex;flex-direction:row;align-items:center;gap:4px;flex:0 0 auto;min-height:40px;padding:0 3px;font-size:12px}
+.journal h1{margin-bottom:10px}.journal .intro{margin-bottom:24px}.journal-day{border-top:1px solid var(--line);padding-top:8px}.journal-day h2{font-size:17px;color:var(--blue);margin:18px 0 4px}.journal .entry{padding:15px 0}.journal .entry p{color:#293747}.journal-note{margin-top:24px}
+.home.home-dashboard{justify-content:space-between}.home.home-dashboard .home-goals{flex-grow:0;height:clamp(220px,34svh,340px);grid-template-rows:repeat(2,minmax(0,1fr))}

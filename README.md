@@ -8,9 +8,9 @@ A simple personal decision journal for iPhone: pause, remember your plan, choose
 2. Tap **Share → Add to Home Screen**. Turn on **Open as Web App** if offered, then tap **Add**.
 3. Open the **Steer** icon. Use this installed app consistently for your journal.
 4. Tap one of the eight goals, select one or more steps in its floating window, then tap **Save my choices**. Use **＋ Add** for a step of your own.
-5. Wait for the goal’s saved message and darker tile border. Day and week trends include the saved moment.
+5. Wait for the goal’s saved message and darker tile border. The border shows that you saved a choice for that goal today; it clears the next day.
 
-My Day offers eight directions: Start My Day, Move Well, Eat Well, Be Present, Use My Time Well, Connect Well, Be Kind to Myself, and Rest Well. Each opens a floating window with its encouragement and editable steps. The darker border appears only after a good choice for that goal is saved today.
+My Day offers eight directions: Start My Day, Move Well, Eat Well, Be Present, Use My Time Well, Connect Well, Be Kind to Myself, and Rest Well. Each opens a floating window with its encouragement and editable steps. The darker border appears only after a good choice for that goal is saved today. The Journal keeps the actual saved moments in date order, without scores or day/week counts.
 
 Settings lets you add directions with a picture, rename or hide buttons, edit each direction’s encouragement and steps, and keep extra encouragement phrases. Tap **Save my settings** to keep changes locally.
 
@@ -52,7 +52,7 @@ Installation reference: [Apple's Home Screen web app guide](https://support.appl
 Storage reference: [WebKit storage policy](https://webkit.org/blog/14403/updates-to-storage-policy/).
 
 ## Moment flow
-Choose a goal, read its brief encouragement, select one or more steps, and tap **Save my choices**. The selected steps become one local journal moment, so daily and weekly counts reflect moments rather than the number of selected steps. **Save journal to Files** appears on My Day after a committed choice.
+Choose a goal, read its brief encouragement, select one or more steps, and tap **Save my choices**. The selected steps become one local journal moment, and the goal tile gains a darker border for the rest of the day. **Save journal to Files** appears on My Day after a committed choice.
 
 Settings → My directions → Things I could do instead lets you edit, add, or remove alternatives for each goal (up to 30 per goal). The eight starter goals each include five options. Save my settings commits changes locally. Existing custom lists, including intentionally empty lists, are preserved. Selected action text is saved with each entry and included in local backups, even if the settings list changes later.
 
@@ -79,3 +79,5 @@ Version 1.4.2 replaces the splash character with the supplied tree landscapes. T
 Version 1.5.0 makes My Day the fastest entry point. The time-based landscape becomes a compact banner, daily and weekly good-choice counts sit beside the prompt, and every active goal appears in a four-column icon grid. Tapping a goal opens its encouragement and next steps directly. Earlier-choice recording, the recipe, and build information remain available below More. The dashboard is sized for the iPhone 17 Pro Max viewport without scrolling at the default text size.
 
 Version 1.10.0 gives all eight goals the same floating quick-choice window. Each uses its own saved options, meaningful colorful icons, multi-selection, and a custom Add step. After a committed save, My Day highlights the goal and offers a local journal backup without changing tabs.
+
+Version 1.11.0 removes day/week counts from the interface. The border on a goal tile shows that a choice was saved for it today and resets on the next local day. Trends becomes a simple date-ordered Journal of saved moments; entries and backups are preserved.
