@@ -82,6 +82,21 @@
 .home-dashboard .daily-check>span{width:25px;height:25px;border:2px solid #9bafc1;border-radius:50%;display:grid;place-items:center}
 .home-dashboard .daily-check.is-checked{background:transparent;color:#fff}
 .home-dashboard .daily-check.is-checked>span{border-color:#4d8b65;background:#4d8b65}
+.quick-saved{padding:9px 12px;margin:0 auto;color:#3d7654;background:#edf6ef;border-radius:10px;font-size:14px}
+.quick-overlay{position:fixed;inset:0;z-index:30;background:rgba(28,39,52,.74);display:grid;place-items:center;padding:calc(env(safe-area-inset-top) + 16px) 18px calc(env(safe-area-inset-bottom) + 16px);backdrop-filter:blur(1px)}
+.quick-dialog{width:min(100%,430px);max-height:100%;overflow:auto;background:#fff;border:1px solid #dbe2e8;border-radius:24px;padding:21px 19px 19px;box-shadow:0 20px 65px rgba(26,42,58,.35);text-align:left;animation:quick-pop 180ms ease-out both;isolation:isolate}
+.quick-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.quick-dialog-head .eyebrow{margin:0 0 5px}
+.quick-dialog-head h2{font-size:23px;line-height:1.15;margin:0;color:#293747}
+.quick-close{flex:0 0 44px;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--muted);display:grid;place-items:center}
+.quick-encouragement{font-size:15px;line-height:1.4;color:var(--encouragement);margin:12px 0 15px}
+.quick-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.quick-option{min-height:88px;padding:10px 9px;border:1px solid #dce4ea;border-radius:15px;background:#fff;display:flex;align-items:center;gap:10px;text-align:left;font-size:14px;line-height:1.25;font-weight:600;color:#293747}
+.quick-option:hover{background:#f8fafc;border-color:#b4c5d3}.quick-option:active{background:#f1f6fa;border-color:#91abc2}
+.quick-option-icon{width:42px;height:42px;flex:0 0 42px;border-radius:14px;background:#edf4f8;color:var(--blue);display:grid;place-items:center}
+.quick-dialog .error,.quick-dialog .small{margin:12px 0 0}
+@keyframes quick-pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.quick-dialog{animation:none}}
 .shell .utility-nav{position:static;transform:none;width:auto;max-width:none;display:flex;justify-content:flex-end;gap:14px;border:0;background:transparent;padding:0;min-height:44px;box-shadow:none}
 .shell .utility-nav button{display:flex;flex-direction:row;align-items:center;gap:5px;flex:0 0 auto;min-height:44px;padding:0 3px;font-size:12px}
 .shell:has(.home-dashboard){padding-bottom:calc(20px + env(safe-area-inset-bottom))}
