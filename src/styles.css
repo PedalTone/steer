@@ -76,6 +76,12 @@
 .home-dashboard .home-recipe{border-top:0;padding-top:0;gap:12px}
 .home-dashboard .home-recipe>div{font-size:14px}
 .home.home-dashboard .home-links{border:0;margin:0;padding:0}
+.home-dashboard .home-goal-card{position:relative;min-width:0;min-height:90px}
+.home-dashboard .home-goal-card>.home-goal{width:100%;height:100%;min-height:90px;padding:12px 3px 8px}
+.home-dashboard .daily-check{position:absolute;top:0;right:0;width:44px;height:44px;min-width:44px;min-height:44px;border:0;border-radius:50%;background:transparent;color:#fff;display:grid;place-items:center;padding:0}
+.home-dashboard .daily-check>span{width:25px;height:25px;border:2px solid #9bafc1;border-radius:50%;display:grid;place-items:center}
+.home-dashboard .daily-check.is-checked{background:transparent;color:#fff}
+.home-dashboard .daily-check.is-checked>span{border-color:#4d8b65;background:#4d8b65}
 .shell .utility-nav{position:static;transform:none;width:auto;max-width:none;display:flex;justify-content:flex-end;gap:14px;border:0;background:transparent;padding:0;min-height:44px;box-shadow:none}
 .shell .utility-nav button{display:flex;flex-direction:row;align-items:center;gap:5px;flex:0 0 auto;min-height:44px;padding:0 3px;font-size:12px}
 .shell:has(.home-dashboard){padding-bottom:calc(20px + env(safe-area-inset-bottom))}

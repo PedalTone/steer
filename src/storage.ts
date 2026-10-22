@@ -2,8 +2,10 @@ import { z } from 'zod';
 import { defaults, alternativeSchema, settingsSchema, mutationSchema, type Entry, type Settings } from './journal.ts';
 const DB_NAME='steer-local-journal-v1';
 const entrySchema=z.object({alternative:alternativeSchema,id:z.string().uuid(),categoryId:z.string().min(1).max(80),categoryLabel:z.string().min(1).max(80),choice:z.enum(['plan','original']),mode:z.enum(['moment','reflection']),occurredAt:z.string().datetime(),recordedAt:z.string().datetime(),note:z.string().max(1000)});
-const backupSchema=z.object({app:z.literal('steer'),version:z.literal(1),exportedAt:z.string().datetime(),settings:settingsSchema,entries:z.array(entrySchema).max(50000)}).refine(v=>new Set(v.entries.map(e=>e.id)).size===v.entries.length,'Duplicate entries in backup');
-export type Journal={settings:Settings;entries:Entry[]};
+const dailyCheckinSchema=z.object({date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),categoryIds:z.array(z.string().min(1).max(80)).max(60)});
+const backupSchema=z.object({app:z.literal('steer'),version:z.literal(1),exportedAt:z.string().datetime(),settings:settingsSchema,entries:z.array(entrySchema).max(50000),dailyCheckins:z.array(dailyCheckinSchema).max(400).default([])}).refine(v=>new Set(v.entries.map(e=>e.id)).size===v.entries.length,'Duplicate entries in backup');
+export type DailyCheckin=z.infer<typeof dailyCheckinSchema>;
+export type Journal={settings:Settings;entries:Entry[];dailyCheckins:DailyCheckin[]};
 export type Backup=z.infer<typeof backupSchema>;
 function openDB():Promise<IDBDatabase>{return new Promise((resolve,reject)=>{
  if(typeof indexedDB==='undefined'){reject(new Error('Local storage is unavailable. Open Steer in Safari or from your Home Screen and try again.'));return;}
@@ -25,13 +27,25 @@ async function transaction<T>(stores:string[],mode:IDBTransactionMode,run:(tx:ID
  });
 }
 export async function readJournal():Promise<Journal>{
- const data=await transaction<{settings:unknown;entries:unknown[]}>(['entries','preferences'],'readonly',(tx,set)=>{
-  const entries=tx.objectStore('entries').getAll(),settings=tx.objectStore('preferences').get('settings');
-  const collect=()=>{if(entries.readyState==='done'&&settings.readyState==='done')set({entries:entries.result,settings:settings.result??defaults});};entries.onsuccess=collect;settings.onsuccess=collect;
+ const data=await transaction<{settings:unknown;entries:unknown[];dailyCheckins:unknown}>(['entries','preferences'],'readonly',(tx,set)=>{
+  const entries=tx.objectStore('entries').getAll(),settings=tx.objectStore('preferences').get('settings'),dailyCheckins=tx.objectStore('preferences').get('dailyCheckins');
+  const collect=()=>{if(entries.readyState==='done'&&settings.readyState==='done'&&dailyCheckins.readyState==='done')set({entries:entries.result,settings:settings.result??defaults,dailyCheckins:dailyCheckins.result??[]});};entries.onsuccess=collect;settings.onsuccess=collect;dailyCheckins.onsuccess=collect;
  });
- const parsedSettings=settingsSchema.safeParse(data.settings),parsedEntries=z.array(entrySchema).safeParse(data.entries);
- if(!parsedSettings.success||!parsedEntries.success)throw new Error('Your journal needs recovery. Your stored data has been left untouched.');
- return {settings:parsedSettings.data,entries:parsedEntries.data.sort((a,b)=>b.occurredAt.localeCompare(a.occurredAt))};
+ const parsedSettings=settingsSchema.safeParse(data.settings),parsedEntries=z.array(entrySchema).safeParse(data.entries),parsedCheckins=z.array(dailyCheckinSchema).max(400).safeParse(data.dailyCheckins);
+ if(!parsedSettings.success||!parsedEntries.success||!parsedCheckins.success)throw new Error('Your journal needs recovery. Your stored data has been left untouched.');
+ return {settings:parsedSettings.data,entries:parsedEntries.data.sort((a,b)=>b.occurredAt.localeCompare(a.occurredAt)),dailyCheckins:parsedCheckins.data};
+}
+export async function toggleDailyCheckin(date:string,categoryId:string):Promise<DailyCheckin[]>{
+ if(!dailyCheckinSchema.safeParse({date,categoryIds:[categoryId]}).success)throw new Error('This daily check-in is invalid.');
+ return transaction<DailyCheckin[]>(['preferences'],'readwrite',(tx,set)=>{
+  const store=tx.objectStore('preferences'),req=store.get('dailyCheckins');
+  req.onsuccess=()=>{const all=z.array(dailyCheckinSchema).safeParse(req.result??[]);if(!all.success){tx.abort();return;}
+   const map=new Map(all.data.map(d=>[d.date,new Set(d.categoryIds)])),ids=map.get(date)??new Set<string>();
+   if(ids.has(categoryId))ids.delete(categoryId);else ids.add(categoryId);if(ids.size)map.set(date,ids);else map.delete(date);
+   const next=[...map].sort(([a],[b])=>a.localeCompare(b)).slice(-400).map(([day,values])=>({date:day,categoryIds:[...values]}));
+   store.put(next,'dailyCheckins');set(next);
+  };
+ });
 }
 export async function writeJournal(body:unknown):Promise<Entry|undefined>{
  const parsed=mutationSchema.safeParse(body);if(!parsed.success)throw new Error(parsed.error.issues[0].message);const v=parsed.data;
@@ -58,6 +72,7 @@ export async function importBackup(backup:Backup,restoreSettings:boolean):Promis
  return transaction<number>(['entries','preferences'],'readwrite',(tx,set)=>{
   let added=0;set(0);const store=tx.objectStore('entries');
   for(const entry of valid.entries){const req=store.get(entry.id);req.onsuccess=()=>{if(!req.result){store.add(entry);set(++added);}};}
+  const pref=tx.objectStore('preferences'),checkins=pref.get('dailyCheckins');checkins.onsuccess=()=>{const current=z.array(dailyCheckinSchema).safeParse(checkins.result??[]);if(!current.success){tx.abort();return;}const merged=new Map(current.data.map(d=>[d.date,new Set(d.categoryIds)]));for(const d of valid.dailyCheckins){const ids=merged.get(d.date)??new Set<string>();for(const id of d.categoryIds)ids.add(id);merged.set(d.date,ids);}pref.put([...merged].sort(([a],[b])=>a.localeCompare(b)).slice(-400).map(([date,ids])=>({date,categoryIds:[...ids]})),'dailyCheckins');};
   if(restoreSettings)tx.objectStore('preferences').put(valid.settings,'settings');
  });
 }

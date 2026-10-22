@@ -28,6 +28,11 @@ test('My Day shows every goal and opens its actions directly',async()=>{
   assert.equal(cards.length,8);
   assert.equal(renderer.root.findAllByType('img').length,1);
   assert.equal(renderer.root.findAllByProps({className:'goal-icon'}).length,8);
+  const checkin=renderer.root.findAllByProps({className:'daily-check'})[0];
+  assert.equal(checkin.props['aria-pressed'],false);
+  await act(async()=>{checkin.props.onClick();await new Promise(resolve=>setTimeout(resolve,20));});
+  assert.equal(renderer.root.findAllByProps({className:'daily-check is-checked'}).length,1);
+  assert.equal(renderer.root.findAllByType('button').filter(b=>String(b.props.className).includes('daily-check')&&b.props['aria-pressed']).length,1);
   assert.equal(renderer.root.findAllByProps({className:'moment-options'}).length,0);
   await act(async()=>cards.find(c=>textOf(c.props.children).includes('Eat Well')).props.onClick());
   assert.equal(renderer.root.findAllByProps({className:'home-goal'}).length,0);
