@@ -1,4 +1,5 @@
 const icons:Record<string,{symbol:string;color:string,label:string}>={
+ 'connect-well':{symbol:'🫂',color:'#dff3f2',label:'Connect Well'},
  'scrolling':{symbol:'🌿',color:'#e4f5e9',label:'Be Present'},
  'eat-well':{symbol:'🥑',color:'#f0f3d5',label:'Eat Well'},
  'staying-up-late':{symbol:'🌙',color:'#ece8fc',label:'Rest Well'},

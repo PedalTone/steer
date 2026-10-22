@@ -25,9 +25,9 @@ test('My Day shows every goal and opens its actions directly',async()=>{
   const textOf=(node)=>typeof node==='string'?node:Array.isArray(node)?node.map(textOf).join(' '):node?.props?textOf(node.props.children):'';
   const button=(text)=>renderer.root.findAllByType('button').find(b=>textOf(b.props.children).includes(text));
   let cards=renderer.root.findAllByProps({className:'home-goal'});
-  assert.equal(cards.length,7);
+  assert.equal(cards.length,8);
   assert.equal(renderer.root.findAllByType('img').length,1);
-  assert.equal(renderer.root.findAllByProps({className:'goal-icon'}).length,7);
+  assert.equal(renderer.root.findAllByProps({className:'goal-icon'}).length,8);
   assert.equal(renderer.root.findAllByProps({className:'moment-options'}).length,0);
   await act(async()=>cards.find(c=>textOf(c.props.children).includes('Eat Well')).props.onClick());
   assert.equal(renderer.root.findAllByProps({className:'home-goal'}).length,0);
@@ -57,7 +57,7 @@ test('My Day shows every goal and opens its actions directly',async()=>{
   const contents=JSON.parse(await offered.text());
   assert.equal(contents.entries.length,1);
   assert.equal(contents.entries[0].alternative,'Pause and check whether I’m hungry');
-  assert.equal(contents.settings.categories.length,7);
+  assert.equal(contents.settings.categories.length,8);
   assert.match(offered.name,/^steer-journal-.*\.json$/);
   Object.defineProperty(navigator,'share',{value:async()=>{},configurable:true});
   await act(async()=>button('Save journal to Files').props.onClick());

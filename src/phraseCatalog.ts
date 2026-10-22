@@ -1,5 +1,6 @@
 // Approved personal encouragements, grouped by stable goal IDs.
 export const phraseCatalog:Record<string,string[]>={
+'connect-well':['A small connection can change the feel of your day.','You don’t need a big plan—just reach out.','Someone you care about may be glad to hear from you.','A good day has room for the people you love.','Give someone your attention for a few minutes.'],
 'scrolling':`The next scroll can wait. Your life is here.
 You noticed the pull. Now you can choose.
 Put the phone down. Pick your life back up.

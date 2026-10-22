@@ -76,3 +76,9 @@
 .home-dashboard .home-recipe{border-top:0;padding-top:0;gap:12px}
 .home-dashboard .home-recipe>div{font-size:14px}
 .home.home-dashboard .home-links{border:0;margin:0;padding:0}
+.shell .utility-nav{position:static;transform:none;width:auto;max-width:none;display:flex;justify-content:flex-end;gap:14px;border:0;background:transparent;padding:0;min-height:44px;box-shadow:none}
+.shell .utility-nav button{display:flex;flex-direction:row;align-items:center;gap:5px;flex:0 0 auto;min-height:44px;padding:0 3px;font-size:12px}
+.shell:has(.home-dashboard){padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.home.home-dashboard{min-height:calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 76px)}
+.shell .utility-nav{position:static;transform:none;width:auto;max-width:none;display:flex;justify-content:flex-end;gap:10px;border:0;background:transparent;padding:0 4px;min-height:40px;box-shadow:none}
+.shell .utility-nav button{display:flex;flex-direction:row;align-items:center;gap:4px;flex:0 0 auto;min-height:40px;padding:0 3px;font-size:12px}

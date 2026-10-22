@@ -9,6 +9,7 @@ export const starterEncouragements = [
 export const legacyCategories = [['scrolling','Scrolling'],['seconds','Going for seconds'],['junk-food','Eating junk food'],['unplanned-eating','Unplanned eating'],['staying-up-late','Staying up late'],['negative-self-talk','Negative self-talk'],['lingering-in-bed','Lingering in bed'],['watching-movies','Watching movies']].map(([id,label])=>({id,label,image:`option-a-${id}-v2.webp`,active:true}));
 export const foodIds = new Set(['seconds','junk-food','unplanned-eating']);
 export const directionDefinitions = [
+ {id:'connect-well',label:'Connect Well',image:'icon:connect-well',encouragement:'A small connection can change the feel of your day.',guidance:'You don’t need a big plan—just reach out. Make time for the family and friends who matter to you.'},
  {id:'scrolling',label:'Be Present',image:'option-a-scrolling-v2.webp',encouragement:'You can step away, even when it’s hard to stop.',guidance:'Give your attention to the life in front of you. Put your phone down and take one intentional breath.'},
  {id:'eat-well',label:'Eat Well',image:'option-a-seconds-v2.webp',encouragement:'A little self-control now can feel good later.',guidance:'Choose protein + fiber, limit junk food, and eat sensible portions. Pause before the next bite and decide what fits your plan.'},
  {id:'staying-up-late',label:'Rest Well',image:'option-a-staying-up-late-v2.webp',encouragement:'Give tomorrow’s you a good start.',guidance:'Plenty of rest supports the mind and body you want. Turn off the screen and begin getting ready for bed.'},
@@ -18,6 +19,7 @@ export const directionDefinitions = [
  {id:'move-well',label:'Move Well',image:'move-well.webp',encouragement:'You don’t have to feel motivated to begin.',guidance:'Remember your plan: prioritize strength, move daily, and stay on schedule. Put on your workout clothes and take the first step.'}
 ];
 export const defaultAlternatives: Record<string,string[]> = {
+ 'connect-well':['Send someone a thoughtful text','Call a friend or family member','Ask someone about their day and listen','Invite someone for a walk','Spend ten undistracted minutes together'],
   "scrolling": [
     "Put my phone out of reach",
     "Step outside",
@@ -79,6 +81,10 @@ function upgradeDirections(categories:StoredCategory[]):StoredCategory[]{
  });
  return [...upgraded,...categories.filter(c=>!oldIds.has(c.id)&&!directionDefinitions.some(d=>d.id===c.id))];
 }
+function addConnection(categories:StoredCategory[]):StoredCategory[]{
+ if(categories.some(c=>c.id==='connect-well')||categories.length>=60)return categories;
+ return [...categories,{...directionDefinitions.find(c=>c.id==='connect-well')!,active:true}];
+}
 export const settingsSchema = z.object({
     directionsVersion:z.literal(1).optional(),
     headline: z.string().trim().min(1).max(140),
@@ -87,7 +93,7 @@ export const settingsSchema = z.object({
     outcomes: z.string().trim().min(1).max(300),
     recipe: z.array(z.object({ title: z.string().trim().min(1).max(120), detail: z.string().max(400) })).length(4),
     categories: z.array(categorySchema).min(1).max(60).refine(a => new Set(a.map(x => x.id)).size === a.length, 'Choices must have unique IDs')
-}).transform(settings => ({...settings,directionsVersion:1 as const,categories:(settings.directionsVersion===1?settings.categories:upgradeDirections(settings.categories)).map((c):StoredCategory=>({...c,phrases:c.phrases??[...(phraseCatalog[c.id]??[])],alternatives:c.alternatives??[...(defaultAlternatives[c.id]??[])]})), encouragements: settings.encouragements ?? [settings.headline, ...starterEncouragements.filter(phrase => phrase !== settings.headline)]}));
+}).transform(settings => ({...settings,directionsVersion:1 as const,categories:addConnection(settings.directionsVersion===1?settings.categories:upgradeDirections(settings.categories)).map((c):StoredCategory=>({...c,phrases:c.phrases??[...(phraseCatalog[c.id]??[])],alternatives:c.alternatives??[...(defaultAlternatives[c.id]??[])]})), encouragements: settings.encouragements ?? [settings.headline, ...starterEncouragements.filter(phrase => phrase !== settings.headline)]}));
 export type Settings = z.infer<typeof settingsSchema>;
 export type Category = Settings['categories'][number];
 export type Entry = {
