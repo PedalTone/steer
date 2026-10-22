@@ -78,7 +78,8 @@
 .home.home-dashboard .home-links{border:0;margin:0;padding:0}
 .home-dashboard .home-goal{width:100%;height:100%;padding:12px 3px 8px}
 .home-dashboard .home-goal.is-complete{border:2px solid #ba7956;background:#fff8f1;box-shadow:0 0 0 2px rgba(186,121,86,.12)}
-.quick-saved{padding:9px 12px;margin:0 auto;color:#3d7654;background:#edf6ef;border-radius:10px;font-size:14px}
+.quick-saved{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:44px;padding:4px 7px 4px 12px;margin:0 auto;color:#3d7654;background:#edf6ef;border-radius:10px;font-size:14px;text-align:left}
+.quick-saved .file-save.compact{border:0;padding:0;margin:0;min-width:0;flex:0 0 auto}.quick-saved .file-save.compact .primary{width:auto;min-height:36px;margin:0;padding:6px 9px;border:1px solid #b6cbbd;border-radius:8px;background:#fff;color:#365e89;font-size:12px;white-space:nowrap}.quick-saved .file-save.compact .small{max-width:190px;margin:5px 0 0;font-size:11px}
 .quick-overlay{position:fixed;inset:0;z-index:30;background:rgba(28,39,52,.74);display:grid;place-items:center;padding:calc(env(safe-area-inset-top) + 16px) 18px calc(env(safe-area-inset-bottom) + 16px);backdrop-filter:blur(1px)}
 .quick-dialog{width:min(100%,430px);max-height:100%;overflow:auto;background:#fff;border:1px solid #dbe2e8;border-radius:24px;padding:21px 19px 19px;box-shadow:0 20px 65px rgba(26,42,58,.35);text-align:left;animation:quick-pop 180ms ease-out both;isolation:isolate}
 .quick-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}

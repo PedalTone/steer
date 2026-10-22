@@ -1,7 +1,7 @@
 import {useRef,useState} from 'react';
 import {makeBackup,type Journal} from './storage';
 
-export default function FileSave({journal}:{journal:Journal}){
+export default function FileSave({journal,compact=false}:{journal:Journal;compact?:boolean}){
  const [message,setMessage]=useState(''),[busy,setBusy]=useState(false),pending=useRef(false);
  async function saveFile(){
   if(pending.current)return;pending.current=true;setBusy(true);setMessage('');
@@ -19,5 +19,5 @@ export default function FileSave({journal}:{journal:Journal}){
   }catch(error){setMessage((error as Error).name==='AbortError'?'File save canceled. Your choice is still in Steer. Tap below to try again.':'Could not save the file. Your choice is still in Steer. Please try again.');}
   finally{pending.current=false;setBusy(false);}
  }
- return <div className="file-save"><button type="button" className="primary" disabled={busy} onClick={()=>void saveFile()}>{busy?'Opening file save…':'Save journal to Files'}</button><p className="small">Full journal backup. Choose Save to Files → On My iPhone → Save.</p>{message&&<p className="small" role="status">{message}</p>}</div>;
+ return <div className={`file-save${compact?' compact':''}`}><button type="button" className="primary" disabled={busy} onClick={()=>void saveFile()}>{busy?'Opening file save…':'Save journal to Files'}</button>{!compact&&<p className="small">Full journal backup. Choose Save to Files → On My iPhone → Save.</p>}{message&&<p className="small" role="status">{message}</p>}</div>;
 }

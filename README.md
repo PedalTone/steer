@@ -7,12 +7,12 @@ A simple personal decision journal for iPhone: pause, remember your plan, choose
 1. Open the published GitHub Pages URL in Safari.
 2. Tap **Share → Add to Home Screen**. Turn on **Open as Web App** if offered, then tap **Add**.
 3. Open the **Steer** icon. Use this installed app consistently for your journal.
-4. Choose a situation, read your reminder, select your choice, then tap **Save to my journal**.
-5. Wait for **Saved on this device**. Weekly and monthly trends include the saved choice.
+4. Tap one of the eight goals, select one or more steps in its floating window, then tap **Save my choices**. Use **＋ Add** for a step of your own.
+5. Wait for the goal’s saved message and darker tile border. Day and week trends include the saved moment.
 
-Pause asks **Where do you want to steer?** and offers seven directions: Be Present, Eat Well, Rest Well, Be Kind to Myself, Start My Day, Use My Time Well, and Move Well. Each starts with its approved encouragement, plan reminder, and small next step. **Choose my plan** and **Continue as I was** both lead to the explicit local save step.
+My Day offers eight directions: Start My Day, Move Well, Eat Well, Be Present, Use My Time Well, Connect Well, Be Kind to Myself, and Rest Well. Each opens a floating window with its encouragement and editable steps. The darker border appears only after a good choice for that goal is saved today.
 
-Settings lets you add directions with a picture, rename or hide buttons, edit each direction’s encouragement and next step, and keep extra encouragement phrases. **Another encouragement** cycles through the direction’s phrase and your extra phrases. Tap **Save my settings** to keep changes locally.
+Settings lets you add directions with a picture, rename or hide buttons, edit each direction’s encouragement and steps, and keep extra encouragement phrases. Tap **Save my settings** to keep changes locally.
 
 Older settings automatically show the new directions, retaining custom choices, recipe, general reminders, and hidden-button preferences. Old food records are grouped under Eat Well in reports. Original entry IDs, labels, times, choices, and notes remain stored unchanged; editing a historic entry uses that original record. New settings carry a migration marker so later personal edits are preserved. Older backups remain importable.
 
@@ -24,7 +24,7 @@ All entries, notes, edited reminders, and settings are stored in IndexedDB on th
 
 Each browser/app installation and website origin may have a separate journal. Install the Home Screen app before logging. Data from the previous Sites-hosted app does not automatically move here; the old app and its saved records are not modified by this project.
 
-Local browser storage is not a guaranteed permanent backup. Clearing site data or deleting the app can erase it. The app asks the browser for persistent storage after a save, but this is not guaranteed. Use **Settings → On this device → Back up or restore my journal → Export backup to Files**. Choose **On My iPhone** to keep your backup local, rather than a cloud Files location.
+Local browser storage is not a guaranteed permanent backup. Clearing site data or deleting the app can erase it. The app asks the browser for persistent storage after a save, but this is not guaranteed. After saving a choice, use **My Day → Save journal to Files**. Choose **On My iPhone** to keep your backup local, rather than a cloud Files location.
 
 Backup export opens the system share sheet when supported, or starts a file download. The app cannot confirm whether the file was saved in Files. Backups contain private journal contents; do not commit them to this repository. Restore validates a versioned JSON format, merges missing entry IDs, and preserves existing entries. Replacing reminders requires selecting its separate checkbox.
 
@@ -52,15 +52,15 @@ Installation reference: [Apple's Home Screen web app guide](https://support.appl
 Storage reference: [WebKit storage policy](https://webkit.org/blog/14403/updates-to-storage-policy/).
 
 ## Moment flow
-Choose a goal, read a brief encouragement, and tap an alternative action. Review and explicitly save the choice to the local journal. The confirmation shows today’s and this week’s logged choices and choices toward the plan; these are decisions, not verified completed actions.
+Choose a goal, read its brief encouragement, select one or more steps, and tap **Save my choices**. The selected steps become one local journal moment, so daily and weekly counts reflect moments rather than the number of selected steps. **Save journal to Files** appears on My Day after a committed choice.
 
-Settings → My directions → Things I could do instead lets you edit, add, or remove alternatives for each goal (up to 30 per goal). The seven starter goals each include five options. Save my settings commits changes locally. Existing custom lists, including intentionally empty lists, are preserved. Selected action text is saved with each entry and included in local backups, even if the settings list changes later.
+Settings → My directions → Things I could do instead lets you edit, add, or remove alternatives for each goal (up to 30 per goal). The eight starter goals each include five options. Save my settings commits changes locally. Existing custom lists, including intentionally empty lists, are preserved. Selected action text is saved with each entry and included in local backups, even if the settings list changes later.
 
-Encouragements cycle automatically with a brief anticipation, an offstage yank, and a settling entrance. Each stays readable for at least 6.5 seconds. There are no carousel controls on the action screen. Reduce Motion disables automatic cycling and animation.
+The quick window shows the direction’s opening encouragement. Extra phrases remain editable in Settings. Reduce Motion disables the window’s opening animation.
 
 App updates activate after the complete new shell has downloaded, even with other Steer windows open. The home and goal-selection screens reload automatically when an update activates. Screens with forms or an active decision wait until you save and return to My day, preserving unsaved state. A failed download leaves the previous offline app available. Updates do not modify IndexedDB journal data.
 
-Goals use colorful native emoji icons on pastel tiles. The character appears only on the splash screen. The compact action screen places five starter options directly below a smaller encouragement; longer custom lists or larger accessibility text can still scroll. Notes and reminders are available below the choices.
+Goals use colorful native emoji icons on pastel tiles. The splash screen shows the supplied tree landscape. Each floating window places five starter options below the encouragement; longer custom lists or larger accessibility text can still scroll.
 
 The splash screen shows the package version and actual build timestamp in the device’s local time zone. These identify the loaded app, not the time the page was opened.
 
@@ -77,3 +77,5 @@ Version 1.4.1 places Save journal to Files directly below the confirmed action i
 Version 1.4.2 replaces the splash character with the supplied tree landscapes. The bright image appears 06:00–17:59 and the moonlit image 18:00–05:59 in the device’s local time. It updates while open and when returning to the app. Both original images are included in the offline cache.
 
 Version 1.5.0 makes My Day the fastest entry point. The time-based landscape becomes a compact banner, daily and weekly good-choice counts sit beside the prompt, and every active goal appears in a four-column icon grid. Tapping a goal opens its encouragement and next steps directly. Earlier-choice recording, the recipe, and build information remain available below More. The dashboard is sized for the iPhone 17 Pro Max viewport without scrolling at the default text size.
+
+Version 1.10.0 gives all eight goals the same floating quick-choice window. Each uses its own saved options, meaningful colorful icons, multi-selection, and a custom Add step. After a committed save, My Day highlights the goal and offers a local journal backup without changing tabs.
