@@ -93,7 +93,11 @@
 .quick-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 .quick-option{min-height:88px;padding:10px 9px;border:1px solid #dce4ea;border-radius:15px;background:#fff;display:flex;align-items:center;gap:10px;text-align:left;font-size:14px;line-height:1.25;font-weight:600;color:#293747}
 .quick-option:hover{background:#f8fafc;border-color:#b4c5d3}.quick-option:active{background:#f1f6fa;border-color:#91abc2}
-.quick-option-icon{width:42px;height:42px;flex:0 0 42px;border-radius:14px;background:#edf4f8;color:var(--blue);display:grid;place-items:center}
+.quick-option-icon{width:42px;height:42px;flex:0 0 42px;border-radius:14px;background:#edf4f8;color:var(--blue);display:grid;place-items:center;transition:background-color .14s ease,color .14s ease,transform .14s ease}
+.quick-option-icon.tone-0{background:#e8f2e3;color:#52764c}.quick-option-icon.tone-1{background:#fbf0cf;color:#a67721}.quick-option-icon.tone-2{background:#f9e5d8;color:#b76740}.quick-option-icon.tone-3{background:#f7e1e7;color:#ad5d76}.quick-option-icon.tone-4{background:#e4edf6;color:#4c6e95}.quick-option-icon.tone-5{background:#eee7f3;color:#80608c}
+.quick-option.is-selected{border:2px solid #ba7956;background:#fff8f1;box-shadow:0 0 0 2px rgba(186,121,86,.12);transform:translateY(-1px)}.quick-option.is-selected .quick-option-icon{transform:scale(1.06)}
+.quick-add-trigger{display:flex;align-items:center;justify-content:center;gap:5px;margin:10px auto 0;min-height:44px;padding:6px 16px;border:0;border-radius:12px;background:#f8f1e9;color:#9a633f;font-size:15px;font-weight:650}
+.quick-add-form{display:flex;gap:8px;margin-top:8px}.quick-add-form input{flex:1;min-width:0;min-height:46px}.quick-add-submit{min-width:68px;border:0;border-radius:11px;background:#a76d4c;color:white;font-weight:650;padding:0 14px}.quick-save{margin:10px 0 0;min-height:48px}
 .quick-dialog .error,.quick-dialog .small{margin:12px 0 0}
 @keyframes quick-pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(prefers-reduced-motion:reduce){.quick-dialog{animation:none}}

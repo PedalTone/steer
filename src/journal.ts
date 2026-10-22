@@ -123,7 +123,7 @@ export function chooseEncouragement(phrases:string[],previous:string,random:()=>
     const unique=[...new Set(phrases)];const different=unique.filter(phrase=>phrase!==previous);const candidates=different.length?different:unique;
     return candidates[Math.floor(random()*candidates.length)]??starterEncouragements[0];
 }
-export const alternativeSchema = z.string().trim().min(1).max(180).optional();
+export const alternativeSchema = z.string().trim().min(1).max(1000).optional();
 const recordFields = { alternative: alternativeSchema, categoryId: z.string().min(1).max(80), categoryLabel: z.string().trim().min(1).max(80), choice: z.enum(['plan', 'original']), mode: z.enum(['moment', 'reflection']), occurredAt: z.string().datetime().refine(v => new Date(v).getTime() <= Date.now() + 60000 && new Date(v).getFullYear() >= 2000, 'Choose a time in the past or present'), note: z.string().max(1000) };
 export const mutationSchema = z.discriminatedUnion('action', [
     z.object({ action: z.literal('record'), id: z.string().uuid(), ...recordFields }),
